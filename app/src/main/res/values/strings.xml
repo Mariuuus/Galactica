@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Galactica</string>
+    <string name="back_button">Zurück</string>
+    <string name="settings_button">Einstellungen</string>
+    <string name="multiplayer_button">Mehrspieler</string>
+    <string name="singleplayer_button">Einzelspieler</string>
+    <string name="custom_game">Freies Spiel</string>
+    <string name="campagne_button">Kampagne</string>
+    <string name="start_game_button">Start Game</string>
+</resources>
