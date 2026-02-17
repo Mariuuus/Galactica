@@ -1,9 +1,94 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- =========================
+         THEME
+         ========================= -->
     <style name="Base.Theme.Galactica" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Global default button style (applies to MaterialButton by default) -->
+        <item name="materialButtonStyle">@style/GalacticaButton</item>
+
+        <!-- Optional: global default style for outlined buttons -->
+        <item name="materialButtonOutlinedStyle">@style/GalacticaButton.Outlined</item>
+
+        <!-- If you want consistent typography in general -->
+        <!-- <item name="textAppearanceBodyLarge">@style/TextAppearance.Galactica.Body</item> -->
+
+        <!-- (Optional) If you later define a full color scheme via Material 3 tokens,
+             you can place those items here too. -->
     </style>
 
     <style name="Theme.Galactica" parent="Base.Theme.Galactica" />
+
+
+    <!-- =========================
+         BUTTONS (DEFAULT + VARIANTS)
+         ========================= -->
+
+    <!-- Default button for the whole app -->
+    <style name="GalacticaButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/space_blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textStyle">bold</item>
+
+        <!-- Optional: make buttons feel more “game UI” -->
+        <item name="android:minHeight">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <!-- Primary CTA (Start game / Host / Join) -->
+    <style name="GalacticaButton.Primary" parent="GalacticaButton">
+        <item name="android:backgroundTint">@color/space_glow</item>
+        <item name="android:textColor">@color/space_dark</item>
+    </style>
+
+    <!-- Secondary (Settings / Back / Cancel) -->
+    <style name="GalacticaButton.Secondary" parent="GalacticaButton">
+        <item name="android:backgroundTint">@color/space_blue</item>
+        <item name="android:alpha">0.90</item>
+    </style>
+
+    <!-- Danger (Disconnect / Leave lobby) -->
+    <style name="GalacticaButton.Danger" parent="GalacticaButton">
+        <item name="android:backgroundTint">@color/galactica_red</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Outlined variant -->
+    <style name="GalacticaButton.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/space_glow</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textColor">@color/space_glow</item>
+        <item name="android:minHeight">52dp</item>
+    </style>
+
+    <!-- Text button variant -->
+    <style name="GalacticaButton.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/space_glow</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Grid buttons: fill available cell space in GridLayout -->
+    <style name="GalacticaButton.Grid" parent="GalacticaButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+
+    <!-- =========================
+         OPTIONAL: TYPOGRAPHY (IDEA)
+         ========================= -->
+
+    <style name="TextAppearance.Galactica.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

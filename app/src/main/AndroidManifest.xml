@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Galactica">
         <activity
+            android:name=".IngameSinglePlayerActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
