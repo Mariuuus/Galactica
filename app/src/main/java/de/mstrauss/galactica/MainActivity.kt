@@ -2,18 +2,21 @@ package de.mstrauss.galactica
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import android.view.View
+import androidx.core.view.WindowInsetsControllerCompat
 import de.mstrauss.galactica.patterns.MainMenuState
-import de.mstrauss.galactica.patterns.MenuUi
 import de.mstrauss.galactica.patterns.MenuStateMachine
+import de.mstrauss.galactica.patterns.MenuUi
 import de.mstrauss.galactica.patterns.MultiPlayerState
 import de.mstrauss.galactica.patterns.SettingsState
 import de.mstrauss.galactica.patterns.SinglePlayerPlaygroundState
 import de.mstrauss.galactica.patterns.SinglePlayerState
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +26,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContentView(R.layout.activity_main)
+
+        // from https://stackoverflow.com/questions/74002879/android-studio-full-screen-deprecated
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val windowInsetsController =
+            WindowInsetsControllerCompat(window, window.decorView)
+        // Hide system bars
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -46,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             stateMachine.changeState((SinglePlayerPlaygroundState()))
         }
         findViewById<View>(R.id.start_single_player_game_button).setOnClickListener {
-            startActivity(Intent(this, IngameSinglePlayerActivity::class.java))
+            startActivity(Intent(this, SinglePlayerActivity::class.java))
         }
         stateMachine.changeState(MainMenuState())
     }

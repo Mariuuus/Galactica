@@ -27,15 +27,16 @@
 
     <!-- Default button for the whole app -->
     <style name="GalacticaButton" parent="Widget.Material3.Button">
-        <item name="android:backgroundTint">@color/space_blue</item>
+        <item name="android:backgroundTint">@color/space_glow</item>
         <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">16dp</item>
+        <item name="cornerRadius">8dp</item>
         <item name="android:textStyle">bold</item>
-
         <!-- Optional: make buttons feel more “game UI” -->
         <item name="android:minHeight">52dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">2dp</item>
+        <item name="android:insetBottom">2dp</item>
+        <item name="android:insetLeft">2dp</item>
+        <item name="android:insetRight">2dp</item>
         <item name="android:letterSpacing">0.03</item>
     </style>
 
@@ -61,8 +62,8 @@
     <style name="GalacticaButton.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="strokeColor">@color/space_glow</item>
         <item name="strokeWidth">2dp</item>
-        <item name="cornerRadius">16dp</item>
-        <item name="android:textColor">@color/space_glow</item>
+        <item name="cornerRadius">2dp</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:minHeight">52dp</item>
     </style>
 

@@ -5,53 +5,100 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IngameSinglePlayerActivity">
+    android:background="@color/space_glow"
+    tools:context=".SinglePlayerActivity">
 
-    <AbsoluteLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:orientation="horizontal"
+            android:background="@color/space_dark"
             android:gravity="center"
-            android:background="@color/galactica_red"
-            >
+            android:orientation="horizontal"
+            android:padding="10dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
                 android:text="Moves: X/X"
                 android:textAlignment="textStart"
-                android:layout_weight="1"/>
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
                 android:text="Planets Found: "
                 android:textAlignment="center"
-                android:layout_weight="1"/>
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="placeholder"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="@string/placeholder"
                 android:textAlignment="textEnd"
-                android:layout_weight="1"/>
+                android:textColor="#FFFFFF" />
         </LinearLayout>
-    </AbsoluteLayout>
 
-    <GridLayout
-        android:id="@+id/single_player_grid"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="60dp"
-        android:columnCount="7"
-        android:rowCount="8"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <GridLayout
+            android:id="@+id/single_player_grid"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:background="@color/space_blue"
+            android:columnCount="7"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:rowCount="8"
+            android:layout_weight = "1"
+            />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/space_dark"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="@string/placeholder"
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="@string/placeholder"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="@string/placeholder"
+                android:textAlignment="textEnd"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

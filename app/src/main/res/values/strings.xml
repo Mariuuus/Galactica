@@ -7,4 +7,5 @@
     <string name="custom_game">Freies Spiel</string>
     <string name="campagne_button">Kampagne</string>
     <string name="start_game_button">Start Game</string>
+    <string name="placeholder">N/A</string>
 </resources>
