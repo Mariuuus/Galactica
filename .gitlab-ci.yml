@@ -7,7 +7,6 @@ variables:
   ANDROID_SDK_ROOT: "$CI_PROJECT_DIR/android-sdk"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
 
 default:
   image: eclipse-temurin:17-jdk
@@ -20,6 +19,8 @@ default:
   before_script:
     - apt-get update -y
     - apt-get install -y wget unzip
+    - export JAVA_HOME="$(dirname "$(dirname "$(readlink -f "$(which java)")")")"
+    - export PATH="$JAVA_HOME/bin:$PATH"
     - mkdir -p "$ANDROID_HOME/cmdline-tools"
     - wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
     - unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_HOME/cmdline-tools"
