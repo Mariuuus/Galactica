@@ -4,10 +4,10 @@ import android.content.Context
 import android.view.View
 import kotlin.random.Random
 
-class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context) {
+class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols) {
     class Coordinate(val x: Int, val y: Int)
     companion object {
-        internal fun validateConfiguration(gridRows: Int, gridCols: Int, planetAmount: Int) {
+        internal fun validateConfiguration(gridRows: Int, gridCols: Int, planetAmount: Int, allowedMoves: Int) {
             require(planetAmount <= gridCols * gridRows -1) {
                 "More planets than available grid positions! (or equal!)"
             }
@@ -20,6 +20,9 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
             require(planetAmount > 0 ) {
                 "planets must be greater than 0!"
             }
+            require(allowedMoves in planetAmount..(gridCols*gridRows)) {
+                "allowedMoves is out of Bounds!"
+            }
         }
     }
 
@@ -31,10 +34,10 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
     operator fun Array<Array<Cell>>.set(c: Coordinate, value: Cell) {
         this[c.y][c.x] = value
     }
-
     val flagMode = false
+
     init {
-        validateConfiguration(gridRows, gridCols, planetAmount)
+        validateConfiguration(gridRows, gridCols, planetAmount, allowedMoves)
 
         field = Array(gridRows) { row ->
             Array(gridCols) { col ->

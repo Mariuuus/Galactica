@@ -11,12 +11,13 @@ class GameTest {
         val rows: Int,
         val cols: Int,
         val planets: Int,
+        val allowedMoves: Int
     )
 
     @Test
     fun defaultConfigurationIsValid() {
         assertDoesNotThrow {
-            Game.validateConfiguration(7, 9, 4)
+            Game.validateConfiguration(7, 9, 4, 7*9)
         }
     }
 
@@ -24,7 +25,7 @@ class GameTest {
     @MethodSource("invalidConfigurations")
     fun invalidConfigurationsThrow(config: InvalidGameConfig) {
         assertThrows(IllegalArgumentException::class.java) {
-            Game.validateConfiguration(config.rows, config.cols, config.planets)
+            Game.validateConfiguration(config.rows, config.cols, config.planets, config.rows*config.cols)
         }
     }
 
@@ -32,23 +33,29 @@ class GameTest {
         @JvmStatic
         fun invalidConfigurations(): List<InvalidGameConfig> = listOf(
             // too many planets
-            InvalidGameConfig(1, 1, 2),
-            InvalidGameConfig(2, 2, 5),
-            InvalidGameConfig(3, 3, 10),
-            InvalidGameConfig(7, 9, 64),
+            InvalidGameConfig(1, 1, 2, 2),
+            InvalidGameConfig(2, 2, 5, 5),
+            InvalidGameConfig(3, 3, 10, 10),
+            InvalidGameConfig(7, 9, 64, 64),
 
             // negative values
-            InvalidGameConfig(-1, 1, 1),
-            InvalidGameConfig(1, -1, 1),
-            InvalidGameConfig(1, 1, -1),
+            InvalidGameConfig(-1, 1, 1,1),
+            InvalidGameConfig(1, -1, 1,1),
+            InvalidGameConfig(1, 1, -1,1),
+            InvalidGameConfig(1, 1, 1,-1),
 
             // zeros in any arg
-            InvalidGameConfig(0, 1, 1),
-            InvalidGameConfig(1, 0, 1),
-            InvalidGameConfig(1, 1, 0),
+            InvalidGameConfig(0, 1, 1,1),
+            InvalidGameConfig(1, 0, 1,1),
+            InvalidGameConfig(1, 1, 0,1),
+            InvalidGameConfig(1, 1, 1,0),
 
             //exactly the same planetAmount
-            InvalidGameConfig(2, 2, 4),
+            InvalidGameConfig(2, 2, 4,4),
+
+            //moves left out of bounds
+            InvalidGameConfig(2, 2, 2,5),
+            InvalidGameConfig(2, 2, 2,1),
         )
     }
 }
