@@ -25,7 +25,7 @@ class GameTest {
     @MethodSource("invalidConfigurations")
     fun invalidConfigurationsThrow(config: InvalidGameConfig) {
         assertThrows(IllegalArgumentException::class.java) {
-            Game.validateConfiguration(config.rows, config.cols, config.planets, config.rows*config.cols)
+            Game.validateConfiguration(config.rows, config.cols, config.planets, config.allowedMoves)
         }
     }
 
@@ -57,5 +57,15 @@ class GameTest {
             InvalidGameConfig(2, 2, 2,5),
             InvalidGameConfig(2, 2, 2,1),
         )
+    }
+
+    @Test
+    fun testHintCalculation() {
+       //val game = Game()
+    }
+
+    @Test
+    fun testPlanetDuplicateCoordinate() {
+
     }
 }

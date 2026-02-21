@@ -6,8 +6,12 @@ import kotlin.random.Random
 
 class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols) {
     class Coordinate(val x: Int, val y: Int)
+
+    var random = Random.Default
+
     companion object {
         internal fun validateConfiguration(gridRows: Int, gridCols: Int, planetAmount: Int, allowedMoves: Int) {
+            println("planetAmount=$planetAmount grid=${gridCols*gridRows} allowedMoves=$allowedMoves")
             require(planetAmount <= gridCols * gridRows -1) {
                 "More planets than available grid positions! (or equal!)"
             }
@@ -90,13 +94,12 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
     }
 
     private fun generatePlanets(): List<Coordinate> {
-        val r = Random.Default
         val set = mutableSetOf<Coordinate>()
 
         while (set.size < planetAmount) {
             set += Coordinate(
-                r.nextInt(gridCols),
-                r.nextInt(gridRows)
+                random.nextInt(gridCols),
+                random.nextInt(gridRows)
             )
         }
 
