@@ -1,5 +1,6 @@
 package de.mstrauss.galactica
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -43,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.single_player_playground_button).setOnClickListener {
             stateMachine.changeState((SinglePlayerPlaygroundState()))
+        }
+        findViewById<View>(R.id.start_single_player_game_button).setOnClickListener {
+            startActivity(Intent(this, IngameSinglePlayerActivity::class.java))
         }
         stateMachine.changeState(MainMenuState())
     }
