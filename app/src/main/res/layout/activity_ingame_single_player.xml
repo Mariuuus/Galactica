@@ -19,34 +19,69 @@
             android:background="@color/space_dark"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp"
+            android:weightSum="3">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/moves_left_text_view"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="Moves: X/X"
-                android:textAlignment="textStart"
+                android:text="@string/x_moves_left"
+                android:gravity="start|center"
                 android:textColor="#FFFFFF" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/planets_founds_text_view"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="Planets Found: "
-                android:textAlignment="center"
+                android:text="@string/y_von_z_planeten_gefunden"
+                android:gravity="center|center"
                 android:textColor="#FFFFFF" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center|center"
+                android:weightSum="2"
+                >
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights">
+                </RelativeLayout>
+                <Button
+                    android:id="@+id/flagging_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:padding="4dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:text="@string/flag_mode"/>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights">
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/placeholder"
-                android:textAlignment="textEnd"
-                android:textColor="#FFFFFF" />
+                <Button
+                    android:id="@+id/pause_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:backgroundTint="#673AB7"
+                    android:letterSpacing="0"
+                    android:minWidth="0dp"
+                    android:padding="4dp"
+                    app:icon="@android:drawable/ic_media_pause"
+                    app:iconPadding="0dp"
+                    app:iconSize="24dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <GridLayout
