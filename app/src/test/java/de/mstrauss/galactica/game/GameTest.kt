@@ -1,10 +1,20 @@
 package de.mstrauss.galactica.game
 
+import android.content.Context
+import android.view.ContextThemeWrapper
+import de.mstrauss.galactica.R
+import org.junit.Before
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import kotlin.intArrayOf
 
 class GameTest {
     data class InvalidGameConfig(
@@ -58,14 +68,39 @@ class GameTest {
             InvalidGameConfig(2, 2, 2,1),
         )
     }
+}
 
-    @Test
-    fun testHintCalculation() {
-       //val game = Game()
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [33])
+class GameInstrumentedTest {
+    private lateinit var context: Context
+
+    @Before
+    fun setup() {
+        val app = RuntimeEnvironment.getApplication()
+        app.setTheme(R.style.Theme_Galactica)
+        context = ContextThemeWrapper(app, R.style.Theme_Galactica)
     }
 
-    @Test
-    fun testPlanetDuplicateCoordinate() {
+    @org.junit.Test
+    fun testPlanetDuplicateCoordinateBruteForce() {
+        val game = Game(2,2,3, context)
+        (0..100).forEach { _ ->
+            var planetCount = 0
+            for (y in 0..1){
+                for (x in 0..1) {
+                    if (game.field[y][x].isPlanet()) planetCount++;
+                }
+            }
+            Assertions.assertEquals(3, planetCount)
+        }
 
+    }
+
+
+    @org.junit.Test
+    fun testHintCalculation() {
+        //val game = Game()
     }
 }

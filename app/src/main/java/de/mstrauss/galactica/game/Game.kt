@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.View
 import kotlin.random.Random
 
-class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols) {
-    class Coordinate(val x: Int, val y: Int)
+class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell) -> Unit)? = null) {
+    data class Coordinate(val x: Int, val y: Int)
 
     var random = Random.Default
 
@@ -29,6 +29,10 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
             }
         }
     }
+
+
+    var movesLeft = allowedMoves
+    var planetsFound = 0
 
     var field: Array<Array<Cell>>
 
@@ -112,9 +116,14 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
 
     private fun onFieldClicked(field: Cell) {
         if(!flagMode) {
-            field.revealed = true
+            if(!field.revealed) {
+                field.revealed = true
+                movesLeft--
+                if(field.isPlanet()) planetsFound++
+            }
         } else {
             field.flagged = true
         }
+        onUIRefresh?.invoke(field)
     }
 }
