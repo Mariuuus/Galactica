@@ -8,7 +8,6 @@ import org.robolectric.RobolectricTestRunner
 import android.view.ContextThemeWrapper
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.util.exceptions.CellChangeNotAllowedGameExceptions
-import org.junit.function.ThrowingRunnable
 import org.mockito.Mockito
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
@@ -48,9 +47,8 @@ class CellTest {
         cell.revealed = true
         Assert.assertEquals(false, cell.flagged)
         Assert.assertThrows(
-            CellChangeNotAllowedGameExceptions::class.java,
-            ThrowingRunnable { cell.flagged = true }
-        )
+            CellChangeNotAllowedGameExceptions::class.java
+        ) { cell.flagged = true }
     }
 
     @Test fun testRevealingUnflagged() {
@@ -63,9 +61,8 @@ class CellTest {
         cell.flagged = true
 
         Assert.assertThrows(
-            CellChangeNotAllowedGameExceptions::class.java,
-            ThrowingRunnable { cell.revealed = true }
-        )
+            CellChangeNotAllowedGameExceptions::class.java
+        ) { cell.revealed = true }
     }
 
     @Test
@@ -79,16 +76,4 @@ class CellTest {
 
         Mockito.verify(callback, Mockito.times(1)).invoke(cell)
     }
-
-/*    @Test
-    fun testCallbackCallOnReveal() {
-        @Suppress("UNCHECKED_CAST")
-        val callback = Mockito.mock(Function1::class.java) as (Cell) -> Unit
-
-        cell.onCellClick = callback
-
-        cell.revealed = true
-
-        Mockito.verify(callback, Mockito.times(1)).invoke(cell)
-    }*/
 }
