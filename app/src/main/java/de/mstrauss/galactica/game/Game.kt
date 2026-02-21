@@ -4,12 +4,21 @@ import android.content.Context
 import android.view.View
 import kotlin.random.Random
 
-class Game(val gridRows: Int=8, val gridCols: Int=7, val planetAmount: Int=4, val context: Context) {
+class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context) {
     class Coordinate(val x: Int, val y: Int)
     companion object {
         internal fun validateConfiguration(gridRows: Int, gridCols: Int, planetAmount: Int) {
-            require(planetAmount <= gridCols * gridRows) {
-                "More planets than available grid positions!"
+            require(planetAmount <= gridCols * gridRows -1) {
+                "More planets than available grid positions! (or equal!)"
+            }
+            require(gridRows > 0 ) {
+                "Rows must be greater than 0!"
+            }
+            require(gridCols > 0 ) {
+                "cols must be greater than 0!"
+            }
+            require(planetAmount > 0 ) {
+                "planets must be greater than 0!"
             }
         }
     }

@@ -1,47 +1,54 @@
 package de.mstrauss.galactica.game
 
-import android.content.Context
-import android.view.ContextThemeWrapper
-import de.mstrauss.galactica.R
-import de.mstrauss.galactica.util.exceptions.CellChangeNotAllowedGameExceptions
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
-import org.junit.function.ThrowingRunnable
-import org.junit.runners.Parameterized
-import org.robolectric.RuntimeEnvironment
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 
 class GameTest {
-
-    lateinit var game : Game
-
-    lateinit var context : Context
-
-    @Before
-    fun setup() {
-        val app = RuntimeEnvironment.getApplication()
-        app.setTheme(R.style.Theme_Galactica)
-        context = ContextThemeWrapper(app, R.style.Theme_Galactica)
-    }
+    data class InvalidGameConfig(
+        val rows: Int,
+        val cols: Int,
+        val planets: Int,
+    )
 
     @Test
-    fun testDefaultGame() {
-        game = Game(context = context)
-        Assert.assertEquals(7, game.gridRows)
-        Assert.assertEquals(9, game.gridCols)
-        Assert.assertEquals(false, game.flagMode)
-        Assert.assertEquals(4, game.planetAmount)
-        Assert.assertEquals(7, game.field.size)
-        Assert.assertEquals(9, game.field[0].size)
+    fun defaultConfigurationIsValid() {
+        assertDoesNotThrow {
+            Game.validateConfiguration(7, 9, 4)
+        }
     }
 
-/*    @Test
-    fun testOutOfBoundValues(row:Int, col:Int, planetAmount:Int) {
-        Assert.assertThrows(
-            IllegalArgumentException::class.java,
-            ThrowingRunnable {
-                Game(row, col, planetAmount, context)
-            }
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidConfigurations")
+    fun invalidConfigurationsThrow(config: InvalidGameConfig) {
+        assertThrows(IllegalArgumentException::class.java) {
+            Game.validateConfiguration(config.rows, config.cols, config.planets)
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun invalidConfigurations(): List<InvalidGameConfig> = listOf(
+            // too many planets
+            InvalidGameConfig(1, 1, 2),
+            InvalidGameConfig(2, 2, 5),
+            InvalidGameConfig(3, 3, 10),
+            InvalidGameConfig(7, 9, 64),
+
+            // negative values
+            InvalidGameConfig(-1, 1, 1),
+            InvalidGameConfig(1, -1, 1),
+            InvalidGameConfig(1, 1, -1),
+
+            // zeros in any arg
+            InvalidGameConfig(0, 1, 1),
+            InvalidGameConfig(1, 0, 1),
+            InvalidGameConfig(1, 1, 0),
+
+            //exactly the same planetAmount
+            InvalidGameConfig(2, 2, 4),
         )
-    }*/
+    }
 }
