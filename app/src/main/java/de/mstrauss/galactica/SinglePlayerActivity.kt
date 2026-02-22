@@ -1,6 +1,7 @@
 package de.mstrauss.galactica
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
+import de.mstrauss.galactica.ui.IngameModalView
 
 class SinglePlayerActivity : AppCompatActivity() {
 
@@ -17,6 +19,12 @@ class SinglePlayerActivity : AppCompatActivity() {
 
     lateinit var movesLeftTextView: TextView
     lateinit var planetsFoundTextView: TextView
+    lateinit var winModal: IngameModalView
+    lateinit var loseModal: IngameModalView
+    lateinit var pauseModal: IngameModalView
+
+    lateinit var pauseButton: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +52,12 @@ class SinglePlayerActivity : AppCompatActivity() {
 
         movesLeftTextView = findViewById<TextView>(R.id.moves_left_text_view)
         planetsFoundTextView = findViewById<TextView>(R.id.planets_founds_text_view)
+
+        winModal = findViewById(R.id.win_modal)
+        loseModal = findViewById(R.id.lose_modal)
+        pauseModal = findViewById(R.id.pause_modal)
+
+        pauseButton.setOnClickListener { pauseModal.show() }
 
         refreshUITextElements(null)
     }

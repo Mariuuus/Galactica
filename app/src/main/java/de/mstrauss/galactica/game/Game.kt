@@ -53,7 +53,6 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
                     id = View.generateViewId()
                     posX = col
                     posY = row
-                    text = ""
                     onCellClick = { field -> onFieldClicked(field) }
                 }
             }

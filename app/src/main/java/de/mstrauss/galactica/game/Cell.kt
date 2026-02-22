@@ -3,16 +3,25 @@ package de.mstrauss.galactica.game
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ContextThemeWrapper
+import android.view.Gravity
+import android.widget.FrameLayout
 import android.widget.GridLayout
+import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.button.MaterialButton
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.util.exceptions.CellChangeNotAllowedGameExceptions
+import kotlin.math.max
 
 class Cell @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = com.google.android.material.R.attr.materialButtonStyle
-) : MaterialButton(ContextThemeWrapper(context, R.style.ThemeOverlay_Galactica_GridCell), attrs, defStyleAttr) {
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
+
+    enum class ContentMode {
+        BUTTON,
+        TEXT
+    }
 
     enum class CellType {
         PLANET,
@@ -40,12 +49,73 @@ class Cell @JvmOverloads constructor(
             updateAppearance()
         }
 
+    private val buttonView = MaterialButton(
+        ContextThemeWrapper(context, R.style.ThemeOverlay_Galactica_GridCell),
+        null,
+        com.google.android.material.R.attr.materialButtonStyle
+    ).apply {
+        layoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
+        )
+        text = ""
+        setOnClickListener { onCellClick?.invoke(this@Cell) }
+    }
+
+    private val textView = object : androidx.appcompat.widget.AppCompatTextView(context) {
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            val size = max(measuredWidth, measuredHeight)
+            setMeasuredDimension(size, size)
+        }
+    }.apply {
+        layoutParams = LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
+            Gravity.CENTER
+        )
+        gravity = Gravity.CENTER
+        textAlignment = TEXT_ALIGNMENT_CENTER
+        setPadding(
+            (6 * resources.displayMetrics.density).toInt(),
+            (4 * resources.displayMetrics.density).toInt(),
+            (6 * resources.displayMetrics.density).toInt(),
+            (4 * resources.displayMetrics.density).toInt()
+        )
+        background = AppCompatResources.getDrawable(context, R.drawable.cell_text_circle)
+        text = ""
+        visibility = GONE
+        setOnClickListener { onCellClick?.invoke(this@Cell) }
+    }
+
+    var contentMode: ContentMode = ContentMode.BUTTON
+        private set
+
     var onCellClick: ((Cell) -> Unit)? = null
 
     init {
+        addView(buttonView)
+        addView(textView)
+        isClickable = true
+        isFocusable = true
         setOnClickListener { onCellClick?.invoke(this) }
+        updateAppearance()
     }
-    fun isPlanet() : Boolean = cellType == CellType.PLANET
+
+    fun isPlanet(): Boolean = cellType == CellType.PLANET
+
+    fun showButton() {
+        contentMode = ContentMode.BUTTON
+        buttonView.visibility = VISIBLE
+        textView.visibility = GONE
+    }
+
+    fun showText() {
+        contentMode = ContentMode.TEXT
+        buttonView.visibility = GONE
+        textView.visibility = VISIBLE
+
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -62,7 +132,7 @@ class Cell @JvmOverloads constructor(
     }
 
     private fun updateAppearance() {
-        text = if (revealed) {
+        val label = if (revealed) {
             when (cellType) {
                 CellType.PLANET -> "P"
                 CellType.HINT -> hintNumber.toString()
@@ -72,6 +142,15 @@ class Cell @JvmOverloads constructor(
         } else {
             ""
         }
+
+        textView.text = label
+
+        if (revealed || flagged) {
+            showText()
+        } else {
+            showButton()
+        }
+
         invalidate()
     }
 }
