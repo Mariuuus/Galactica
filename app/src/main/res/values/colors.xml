@@ -5,5 +5,6 @@
     <color name="space_blue">#1B3B6F</color>
     <color name="space_dark">#0B132B</color>
     <color name="space_glow">#5BC0EB</color>
+    <color name="transparent_space_glow">#335BC0EB</color>
     <color name="galactica_red">#D64550</color>
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.graphics.minus
 import androidx.core.graphics.plus
 
 class GridLinesOverlayView @JvmOverloads constructor(
@@ -83,13 +84,20 @@ class GridLinesOverlayView @JvmOverloads constructor(
         super.onDraw(canvas)
 
 
-        for(y in (0..rows).map { n -> n*cellHeight }) {
+        for (y in (0..rows).map { n -> n * cellHeight }) {
             drawLine(canvas, topLeft + PointF(0f, y), topRight + PointF(0f, y))
+
         }
 
-        for(x in (0..cols).map { n -> n*cellWidth }) {
+        for (x in (0..cols).map { n -> n * cellWidth }) {
             drawLine(canvas, topLeft + PointF(x, 0f), bottomLeft + PointF(x, 0f))
+        }
 
+        for (y in (0..<rows-1).map { n -> n * cellHeight }) {
+            for (x in (0..<cols-1).map { n -> n * cellWidth }) {
+                drawLine(canvas, topLeft + PointF(x, y), topLeft + PointF(x + cellWidth, y + cellHeight))
+                drawLine(canvas, topLeft + PointF(x+cellWidth, y), topLeft + PointF(x, y + cellHeight))
+            }
         }
     }
 }
