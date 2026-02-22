@@ -223,7 +223,7 @@
         android:id="@+id/pause_modal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -239,6 +239,7 @@
             android:layout_weight="1"/>
 
         <Button
+            android:id="@+id/resume_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/single_player_resume_button" />

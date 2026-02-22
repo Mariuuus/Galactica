@@ -23,6 +23,7 @@ class SinglePlayerActivity : AppCompatActivity() {
     lateinit var loseModal: IngameModalView
     lateinit var pauseModal: IngameModalView
 
+    lateinit var resumeButton: Button
     lateinit var pauseButton: Button
 
 
@@ -57,7 +58,11 @@ class SinglePlayerActivity : AppCompatActivity() {
         loseModal = findViewById(R.id.lose_modal)
         pauseModal = findViewById(R.id.pause_modal)
 
+        pauseButton = findViewById(R.id.pause_button)
+        resumeButton = findViewById(R.id.resume_button)
+
         pauseButton.setOnClickListener { pauseModal.show() }
+        resumeButton.setOnClickListener { pauseModal.hide() }
 
         refreshUITextElements(null)
     }
