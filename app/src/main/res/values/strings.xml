@@ -24,4 +24,6 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="subtitle">Subtitel</string>
+    <string name="host_game_button">Spiel Hosten</string>
+    <string name="join_game_button">Spiel Beitreten</string>
 </resources>

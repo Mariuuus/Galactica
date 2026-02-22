@@ -145,17 +145,19 @@
             android:gravity="center|start"
             android:orientation="vertical"
             android:padding="10pt"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <Button
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/host_game_button"/>
 
             <Button
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/join_game_button"/>
         </LinearLayout>
 
         <LinearLayout

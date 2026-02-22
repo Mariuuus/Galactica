@@ -1,6 +1,7 @@
 package de.mstrauss.galactica.patterns
 
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -20,7 +21,7 @@ class StateMachineTest {
     @Mock lateinit var testState1: State
     @Mock lateinit var testState2: State
     @Mock lateinit var mockedActivity: AppCompatActivity
-    @Mock lateinit var mockedView: View
+    @Mock lateinit var mockedView: TextView
 
     @Before
     fun setup() {
