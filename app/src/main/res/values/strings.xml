@@ -20,7 +20,8 @@
     <string name="single_player_pause_reset_text">Neustart</string>
     <string name="single_player_retry_level">Erneut Spielen</string>
     <string name="single_player_resume_button">Weiterspielen</string>
-    <string name="reveal_flagged_prompt">Willst du wirklich das markierte Feld aufdecken?</string>
+    <string name="reveal_flagged_prompt">Willst du das markierte Feld wirklich aufdecken?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="subtitle">Subtitel</string>
 </resources>

@@ -2,6 +2,7 @@ package de.mstrauss.galactica.patterns
 
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import de.mstrauss.galactica.R
 
@@ -28,7 +29,9 @@ class MenuUi(
     val multiMenu: View,
     val settingsMenu: View,
     val settingsButton: View,
-    val backButton: View
+    val backButton: View,
+    val campaignLevels: View,
+    val subtitle: TextView
 ) {
     companion object {
         fun bind(mainActivity: AppCompatActivity): MenuUi {
@@ -40,7 +43,9 @@ class MenuUi(
                 mainActivity.findViewById(R.id.multi_menu_layout),
                 mainActivity.findViewById(R.id.settings_menu_layout),
                 mainActivity.findViewById(R.id.menu_settings_button),
-                mainActivity.findViewById(R.id.menu_back_button)
+                mainActivity.findViewById(R.id.menu_back_button),
+                mainActivity.findViewById(R.id.campaign_levels),
+                mainActivity.findViewById(R.id.subtitle)
             )
         }
     }
@@ -53,42 +58,53 @@ class MenuUi(
         settingsMenu.visibility = View.GONE
         settingsButton.visibility = View.GONE
         backButton.visibility = View.GONE
+        campaignLevels.visibility = View.GONE
     }
 
     fun showMainMenu() {
         hideAll()
         mainMenu.visibility = View.VISIBLE
         settingsButton.visibility = View.VISIBLE
+        subtitle.text = "Das Spiel!"
     }
 
     fun showSingleMenu() {
         hideAll()
         singleMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
+        subtitle.text = "Einzelspieler"
     }
 
     fun showSinglePlayground() {
         hideAll()
         singlePlaygroundMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
+        subtitle.text = "Einzelspieler (Freies Spiel)"
     }
 
+    fun showSingleCampaign() {
+        hideAll()
+        campaignLevels.visibility = View.VISIBLE
+        backButton.visibility = View.VISIBLE
+        subtitle.text = "Kampagne"
+    }
 
     fun showMultiMenu() {
         hideAll()
         multiMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
+        subtitle.text = "Mehrspieler"
     }
 
     fun showSettingsMenu() {
         hideAll()
         settingsMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
+        subtitle.text = "Einstellungen"
     }
 }
 
-// menu menu state machine
-
+// menu state machine
 class MenuStateMachine(
     private val ui: MenuUi,
     private val logger: Logger = AndroidLogger
@@ -129,12 +145,23 @@ class SinglePlayerState() : State {
 
 class SinglePlayerPlaygroundState() : State {
     override fun enterState(ui: MenuUi) {
-        Log.d("SinglePlayerPlaygroundState", "enter state: singlePlayer")
+        Log.d("SinglePlayerPlaygroundState", "enter state: SinglePlayerPlayground")
         ui.showSinglePlayground()
     }
 
     override fun exitState(ui: MenuUi) {
-        Log.d("SinglePlayerPlaygroundState", "exit state: singlePlayer")
+        Log.d("SinglePlayerPlaygroundState", "exit state: SinglePlayerPlayground")
+    }
+}
+
+class SinglePlayerCampaignState() : State {
+    override fun enterState(ui: MenuUi) {
+        Log.d("SinglePlayerCampaignState", "enter state: SinglePlayerCampaign")
+        ui.showSingleCampaign()
+    }
+
+    override fun exitState(ui: MenuUi) {
+        Log.d("SinglePlayerCampaignState", "exit state: SinglePlayerCampaign")
     }
 }
 

@@ -2,6 +2,7 @@ package de.mstrauss.galactica
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +12,7 @@ import de.mstrauss.galactica.patterns.MenuStateMachine
 import de.mstrauss.galactica.patterns.MenuUi
 import de.mstrauss.galactica.patterns.MultiPlayerState
 import de.mstrauss.galactica.patterns.SettingsState
+import de.mstrauss.galactica.patterns.SinglePlayerCampaignState
 import de.mstrauss.galactica.patterns.SinglePlayerPlaygroundState
 import de.mstrauss.galactica.patterns.SinglePlayerState
 import de.mstrauss.galactica.ui.applyFullscreen
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.menu_multiplayer_button).setOnClickListener {
             stateMachine.changeState(MultiPlayerState())
         }
-        findViewById<View>(R.id.menu_settings_button_inner).setOnClickListener {
+        findViewById<View>(R.id.menu_settings_button).setOnClickListener {
             stateMachine.changeState(SettingsState())
         }
         findViewById<View>(R.id.menu_back_button_inner).setOnClickListener {
@@ -49,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.single_player_playground_button).setOnClickListener {
             stateMachine.changeState((SinglePlayerPlaygroundState()))
+        }
+        findViewById<Button>(R.id.campaign_button).setOnClickListener {
+            stateMachine.changeState((SinglePlayerCampaignState()))
         }
         findViewById<View>(R.id.start_single_player_game_button).setOnClickListener {
             startActivity(
