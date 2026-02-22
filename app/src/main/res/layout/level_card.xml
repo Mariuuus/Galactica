@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:minWidth="100pt"
+    android:background="@color/transparent_space_glow"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_marginHorizontal="5dp">
+
+    <TextView
+        android:id="@+id/level_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Level 1"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+    </TextView>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+    </TextView>
+
+    <TextView
+        android:id="@+id/best_try"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+    </TextView>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        />
+
+    <Button
+        android:id="@+id/play_level_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Spielen!">
+    </Button>
+</LinearLayout>
