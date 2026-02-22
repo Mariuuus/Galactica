@@ -28,29 +28,223 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            android:foregroundGravity="center_vertical">
+
+            <!-- child view -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="100pt"
+                    android:background="@color/transparent_space_glow"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+                    </TextView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                    />
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Spielen!">
+                    </Button>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="100pt"
+                    android:background="@color/transparent_space_glow"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+                    </TextView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        />
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Spielen!">
+                    </Button>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="100pt"
+                    android:background="@color/transparent_space_glow"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+                    </TextView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        />
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Spielen!">
+                    </Button>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="100pt"
+                    android:background="@color/transparent_space_glow"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+                    </TextView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        />
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Spielen!">
+                    </Button>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minWidth="100pt"
+                    android:background="@color/transparent_space_glow"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magaccusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet">
+                    </TextView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        />
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Spielen!">
+                    </Button>
+                </LinearLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
         <LinearLayout
             android:id="@+id/single_player_playground_setting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:visibility="gone">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="start">
+                android:gravity="start"
+                android:orientation="vertical">
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                </androidx.appcompat.widget.SwitchCompat>
+                    android:layout_height="match_parent"></androidx.appcompat.widget.SwitchCompat>
             </LinearLayout>
+
             <Button
                 android:id="@+id/start_single_player_game_button"
+                style="@android:style/Widget.Material.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@android:style/Widget.Material.Button"
-                android:text="@string/start_game_button">
-            </Button>
+                android:text="@string/start_game_button"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -159,13 +353,14 @@
             android:text="@string/settings_button" />
     </FrameLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/menu_back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|top"
+        android:orientation="vertical"
         android:padding="5pt"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
@@ -174,5 +369,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back_button" />
-    </FrameLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
 import de.mstrauss.galactica.ui.IngameModalView
+import de.mstrauss.galactica.ui.applyFullscreen
 
 class SinglePlayerActivity : AppCompatActivity() {
     companion object {
@@ -61,6 +62,7 @@ class SinglePlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_ingame_single_player)
+        applyFullscreen()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -182,5 +184,10 @@ class SinglePlayerActivity : AppCompatActivity() {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         })
         finish()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) applyFullscreen()
     }
 }

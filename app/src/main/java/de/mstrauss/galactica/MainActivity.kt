@@ -5,9 +5,7 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import de.mstrauss.galactica.patterns.MainMenuState
 import de.mstrauss.galactica.patterns.MenuStateMachine
 import de.mstrauss.galactica.patterns.MenuUi
@@ -15,6 +13,7 @@ import de.mstrauss.galactica.patterns.MultiPlayerState
 import de.mstrauss.galactica.patterns.SettingsState
 import de.mstrauss.galactica.patterns.SinglePlayerPlaygroundState
 import de.mstrauss.galactica.patterns.SinglePlayerState
+import de.mstrauss.galactica.ui.applyFullscreen
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,12 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // from https://stackoverflow.com/questions/74002879/android-studio-full-screen-deprecated
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val windowInsetsController =
-            WindowInsetsControllerCompat(window, window.decorView)
-        // Hide system bars
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        applyFullscreen()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -68,5 +62,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
         stateMachine.changeState(MainMenuState())
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) applyFullscreen()
     }
 }
