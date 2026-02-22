@@ -26,4 +26,5 @@
     <string name="subtitle">Subtitel</string>
     <string name="host_game_button">Spiel Hosten</string>
     <string name="join_game_button">Spiel Beitreten</string>
+    <string name="wait_for_host_text">Warten auf den Host...</string>
 </resources>

@@ -15,7 +15,6 @@ import android.os.Build
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
@@ -33,7 +32,8 @@ import de.mstrauss.galactica.patterns.SinglePlayerCampaignState
 import de.mstrauss.galactica.patterns.SinglePlayerPlaygroundState
 import de.mstrauss.galactica.patterns.SinglePlayerState
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
-import de.mstrauss.galactica.multiplayer.ConnectionTestPayload
+import de.mstrauss.galactica.patterns.MultiPlayerClientLobbyState
+import de.mstrauss.galactica.patterns.MultiPlayerHostLobbyState
 import de.mstrauss.galactica.ui.applyFullscreen
 import java.util.UUID
 
@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity() {
     private var pendingBluetoothAction: PendingBluetoothAction? = null
 
     private var devicePickerDialog: AlertDialog? = null
-    private lateinit var testConnectionButton: Button
-    private lateinit var testConnectionText: TextView
+    private lateinit var multiMenuLayout: View
+    private lateinit var multiplayerLobbyHostLayout: View
 
     private val discoveredDevices = mutableListOf<BluetoothDevice>()
     private val discoveredDeviceLabels = mutableListOf<String>()
@@ -86,19 +86,21 @@ class MainActivity : AppCompatActivity() {
     private val bluetoothConnectionListener = object : BluetoothConnectionManager.Listener {
         override fun onConnected(role: BluetoothConnectionManager.Role) {
             runOnUiThread {
-                showToast("Connected as ${role.name.lowercase()}. Test messaging ready.")
+                if(role == BluetoothConnectionManager.Role.HOST) stateMachine.changeState(MultiPlayerHostLobbyState())
+                if(role == BluetoothConnectionManager.Role.CLIENT) stateMachine.changeState(MultiPlayerClientLobbyState())
+                showToast("Connected as ${role.name.lowercase()}.")
             }
         }
 
         override fun onDisconnected() {
             runOnUiThread {
-                showToast("Bluetooth connection closed.")
+                stateMachine.changeState(MainMenuState())
             }
+            showToast("Bluetooth disconnection!")
+
         }
 
-        override fun onMessageReceived(message: String) {
-            handleIncomingPayload(message)
-        }
+        override fun onMessageReceived(message: String) = Unit
 
         override fun onError(message: String) {
             runOnUiThread {
@@ -158,6 +160,8 @@ class MainActivity : AppCompatActivity() {
         BluetoothConnectionManager.addListener(bluetoothConnectionListener)
 
         stateMachine = MenuStateMachine(MenuUi.bind(this))
+        multiMenuLayout = findViewById(R.id.multi_menu_layout)
+        multiplayerLobbyHostLayout = findViewById(R.id.multiplayer_lobby_host)
         findViewById<View>(R.id.menu_singleplayer_button).setOnClickListener {
             stateMachine.changeState(SinglePlayerState())
         }
@@ -193,9 +197,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.join_game_button).setOnClickListener {
             startJoinDiscovery()
         }
-        testConnectionButton = findViewById(R.id.testConnectionButton)
-        testConnectionText = findViewById(R.id.testConnectionText)
-        testConnectionButton.setOnClickListener { sendTestTimestampMessage() }
         stateMachine.changeState(MainMenuState())
     }
 
@@ -292,23 +293,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun sendTestTimestampMessage() {
-        val payload = ConnectionTestPayload(timestamp = System.currentTimeMillis())
-        val sent = BluetoothConnectionManager.send(payload.encode())
-        if (!sent) {
-            showToast("No active Bluetooth connection.")
-            return
-        }
-        testConnectionText.text = "Sent: ${payload.timestamp}"
-    }
-
-    private fun handleIncomingPayload(rawPayload: String) {
-        val payload = ConnectionTestPayload.decode(rawPayload) ?: return
-        runOnUiThread {
-            testConnectionText.text = "Received: ${payload.timestamp}"
-        }
     }
 
     @SuppressLint("MissingPermission")
