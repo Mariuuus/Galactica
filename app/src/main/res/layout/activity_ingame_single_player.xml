@@ -48,12 +48,12 @@
                 android:gravity="center|center"
                 android:weightSum="2"
                 >
-                <RelativeLayout
+                <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     tools:ignore="NestedWeights">
-                </RelativeLayout>
+                </Space>
 
                 <Switch
                     android:id="@+id/single_flagging_toggle"
@@ -64,12 +64,12 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     tools:ignore="UseSwitchCompatOrMaterialXml">
                 </Switch>
-                <RelativeLayout
+                <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     tools:ignore="NestedWeights">
-                </RelativeLayout>
+                </Space>
 
                 <Button
                     android:id="@+id/pause_button"
