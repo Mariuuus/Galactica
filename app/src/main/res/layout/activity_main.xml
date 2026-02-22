@@ -178,39 +178,147 @@
             android:gravity="center|start"
             android:orientation="vertical"
             android:padding="10pt"
-            android:visibility="visible">
+            android:visibility="gone">
+
             <Button
                 android:id="@+id/host_game_button"
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/host_game_button"/>
+                android:text="@string/host_game_button" />
 
             <Button
                 android:id="@+id/join_game_button"
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/join_game_button"/>
+                android:text="@string/join_game_button" />
+        </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/black">
-            </Space>
-
-            <TextView
-                android:id="@+id/testConnectionText"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/multiplayer_lobby_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WAITING"/>
+                android:orientation="vertical"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
+                android:background="@color/transparent_space_glow"
+                android:gravity="center"
+                android:minWidth="300dp">
 
-            <Button
-                android:id="@+id/testConnectionButton"
-                style="@android:style/Widget.Material.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SEND"/>
+                <TextView
+                    android:id="@+id/testConnectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Spiel konfigurieren"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold|italic">
+                </TextView>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="top">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginVertical="10dp"
+                            >
+                            <TextView
+                                android:layout_width="55dp"
+                                android:layout_height="wrap_content"
+                                android:text="Spalten:"/>
+
+                            <SeekBar
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:min="4"
+                                android:max="15"
+                                android:minWidth="80dp"
+                                android:progress="9" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginVertical="10dp">
+                            <TextView
+                                android:layout_width="55dp"
+                                android:layout_height="wrap_content"
+                                android:text="Zeilen:"/>
+                            <SeekBar
+                                android:layout_width="0dp"
+                                android:minWidth="80dp"
+                                android:layout_weight="1"
+                                android:max="13"
+                                android:min="3"
+                                android:progress="7"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="7"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginVertical="10dp">
+                            <TextView
+                                android:layout_width="55dp"
+                                android:layout_height="wrap_content"
+                                android:text="Planeten:"/>
+                            <SeekBar
+                                android:layout_width="0dp"
+                                android:minWidth="80dp"
+                                android:layout_weight="1"
+                                android:max="10"
+                                android:min="1"
+                                android:progress="4"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <Button
+                    android:id="@+id/testConnectionButton"
+                    style="@android:style/Widget.Material.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spiel STARTEN"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -242,9 +350,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_button" />
-
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -256,7 +362,6 @@
         android:padding="5pt"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent">
-
         <Button
             android:id="@+id/menu_back_button_inner"
             style="@android:style/Widget.Material.Button"

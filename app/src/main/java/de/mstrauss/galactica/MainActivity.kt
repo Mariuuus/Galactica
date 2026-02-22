@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothServerSocket
-import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
@@ -34,13 +32,9 @@ import de.mstrauss.galactica.patterns.SettingsState
 import de.mstrauss.galactica.patterns.SinglePlayerCampaignState
 import de.mstrauss.galactica.patterns.SinglePlayerPlaygroundState
 import de.mstrauss.galactica.patterns.SinglePlayerState
+import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionTestPayload
 import de.mstrauss.galactica.ui.applyFullscreen
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.IOException
 import java.util.UUID
 
 
@@ -59,11 +53,6 @@ class MainActivity : AppCompatActivity() {
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var pendingBluetoothAction: PendingBluetoothAction? = null
 
-    private var acceptThread: AcceptThread? = null
-    private var connectThread: ConnectThread? = null
-    private var connectedThread: ConnectedThread? = null
-    private var hostSocket: BluetoothSocket? = null
-    private var clientSocket: BluetoothSocket? = null
     private var devicePickerDialog: AlertDialog? = null
     private lateinit var testConnectionButton: Button
     private lateinit var testConnectionText: TextView
@@ -90,6 +79,30 @@ class MainActivity : AppCompatActivity() {
                         showToast("No Bluetooth hosts found.")
                     }
                 }
+            }
+        }
+    }
+
+    private val bluetoothConnectionListener = object : BluetoothConnectionManager.Listener {
+        override fun onConnected(role: BluetoothConnectionManager.Role) {
+            runOnUiThread {
+                showToast("Connected as ${role.name.lowercase()}. Test messaging ready.")
+            }
+        }
+
+        override fun onDisconnected() {
+            runOnUiThread {
+                showToast("Bluetooth connection closed.")
+            }
+        }
+
+        override fun onMessageReceived(message: String) {
+            handleIncomingPayload(message)
+        }
+
+        override fun onError(message: String) {
+            runOnUiThread {
+                showToast(message)
             }
         }
     }
@@ -142,6 +155,7 @@ class MainActivity : AppCompatActivity() {
                 addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
             }
         )
+        BluetoothConnectionManager.addListener(bluetoothConnectionListener)
 
         stateMachine = MenuStateMachine(MenuUi.bind(this))
         findViewById<View>(R.id.menu_singleplayer_button).setOnClickListener {
@@ -192,23 +206,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        acceptThread?.cancel()
-        connectThread?.cancel()
-        connectedThread?.cancel()
+        BluetoothConnectionManager.removeListener(bluetoothConnectionListener)
         devicePickerDialog?.dismiss()
         cancelDiscovery()
         unregisterReceiver(discoveryReceiver)
-        closeQuietly(hostSocket)
-        closeQuietly(clientSocket)
     }
 
     @SuppressLint("MissingPermission")
     private fun startHostingAsServer() {
         if (!ensureBluetoothReady(PendingBluetoothAction.HOST)) return
 
-        connectedThread?.cancel()
-        acceptThread?.cancel()
-        acceptThread = AcceptThread(bluetoothAdapter!!).also { it.start() }
+        BluetoothConnectionManager.startHosting(
+            adapter = bluetoothAdapter!!,
+            serviceName = BLUETOOTH_SERVICE_NAME,
+            serviceUuid = BLUETOOTH_SERVICE_UUID
+        )
         showToast("Hosting started. Waiting for client...")
     }
 
@@ -216,7 +228,6 @@ class MainActivity : AppCompatActivity() {
     private fun startJoinDiscovery() {
         if (!ensureBluetoothReady(PendingBluetoothAction.JOIN)) return
 
-        connectedThread?.cancel()
         cancelDiscovery()
         discoveredDevices.clear()
         discoveredDeviceLabels.clear()
@@ -285,7 +296,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendTestTimestampMessage() {
         val payload = ConnectionTestPayload(timestamp = System.currentTimeMillis())
-        val sent = connectedThread?.write(payload.encode()) == true
+        val sent = BluetoothConnectionManager.send(payload.encode())
         if (!sent) {
             showToast("No active Bluetooth connection.")
             return
@@ -297,21 +308,6 @@ class MainActivity : AppCompatActivity() {
         val payload = ConnectionTestPayload.decode(rawPayload) ?: return
         runOnUiThread {
             testConnectionText.text = "Received: ${payload.timestamp}"
-        }
-    }
-
-    private fun onSocketConnected(socket: BluetoothSocket, roleLabel: String) {
-        connectedThread?.cancel()
-        connectedThread = ConnectedThread(socket).also { it.start() }
-        runOnUiThread {
-            showToast("Connected as $roleLabel. Test messaging ready.")
-        }
-    }
-
-    private fun closeQuietly(socket: BluetoothSocket?) {
-        try {
-            socket?.close()
-        } catch (_: IOException) {
         }
     }
 
@@ -345,8 +341,11 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun connectToDevice(device: BluetoothDevice) {
-        connectThread?.cancel()
-        connectThread = ConnectThread(bluetoothAdapter!!, device).also { it.start() }
+        BluetoothConnectionManager.connectToDevice(
+            adapter = bluetoothAdapter!!,
+            device = device,
+            serviceUuid = BLUETOOTH_SERVICE_UUID
+        )
         showToast("Trying to connect to ${device.name ?: device.address}...")
         devicePickerDialog?.dismiss()
     }
@@ -355,111 +354,5 @@ class MainActivity : AppCompatActivity() {
     private fun cancelDiscovery() {
         val adapter = bluetoothAdapter ?: return
         if (adapter.isDiscovering) adapter.cancelDiscovery()
-    }
-
-    private inner class AcceptThread(adapter: BluetoothAdapter) : Thread() {
-        private val serverSocket: BluetoothServerSocket? = try {
-            adapter.listenUsingRfcommWithServiceRecord(BLUETOOTH_SERVICE_NAME, BLUETOOTH_SERVICE_UUID)
-        } catch (_: IOException) {
-            null
-        }
-
-        override fun run() {
-            var socket: BluetoothSocket? = null
-            while (socket == null) {
-                socket = try {
-                    serverSocket?.accept()
-                } catch (_: IOException) {
-                    break
-                }
-            }
-
-            if (socket != null) {
-                hostSocket = socket
-                closeQuietly(clientSocket)
-                onSocketConnected(socket, "host")
-            }
-
-            try {
-                serverSocket?.close()
-            } catch (_: IOException) {
-            }
-        }
-
-        fun cancel() {
-            try {
-                serverSocket?.close()
-            } catch (_: IOException) {
-            }
-        }
-    }
-
-    private inner class ConnectThread(
-        private val adapter: BluetoothAdapter,
-        private val device: BluetoothDevice
-    ) : Thread() {
-        private val socket: BluetoothSocket? = try {
-            device.createRfcommSocketToServiceRecord(BLUETOOTH_SERVICE_UUID)
-        } catch (_: IOException) {
-            null
-        }
-
-        @SuppressLint("MissingPermission")
-        override fun run() {
-            adapter.cancelDiscovery()
-
-            try {
-                socket?.connect()
-                clientSocket = socket
-                closeQuietly(hostSocket)
-                if (socket != null) {
-                    onSocketConnected(socket, "client")
-                }
-            } catch (_: IOException) {
-                closeQuietly(socket)
-                runOnUiThread { showToast("Bluetooth connection failed.") }
-            }
-        }
-
-        fun cancel() {
-            closeQuietly(socket)
-        }
-    }
-
-    private inner class ConnectedThread(private val socket: BluetoothSocket) : Thread() {
-        private val input = DataInputStream(BufferedInputStream(socket.inputStream))
-        private val output = DataOutputStream(BufferedOutputStream(socket.outputStream))
-        @Volatile private var running = true
-
-        override fun run() {
-            while (running) {
-                val message = try {
-                    input.readUTF()
-                } catch (_: IOException) {
-                    break
-                }
-                handleIncomingPayload(message)
-            }
-
-            runOnUiThread {
-                showToast("Bluetooth connection closed.")
-            }
-        }
-
-        fun write(message: String): Boolean {
-            if (!running) return false
-            return try {
-                output.writeUTF(message)
-                output.flush()
-                true
-            } catch (_: IOException) {
-                false
-            }
-        }
-
-        fun cancel() {
-            running = false
-            closeQuietly(socket)
-        }
     }
 }
