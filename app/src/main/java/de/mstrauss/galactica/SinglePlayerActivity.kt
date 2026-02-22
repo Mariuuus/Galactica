@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
+import de.mstrauss.galactica.game.GridLinesOverlayView
 
 class SinglePlayerActivity : AppCompatActivity() {
 
@@ -30,8 +31,10 @@ class SinglePlayerActivity : AppCompatActivity() {
         game = Game(context=this, onUIRefresh = { refreshUITextElements(it) })
 
         val grid = findViewById<GridLayout>(R.id.single_player_grid)
+        val gridOverlay = findViewById<GridLinesOverlayView>(R.id.single_player_grid_overlay)
         grid.rowCount = game.gridRows
         grid.columnCount = game.gridCols
+        gridOverlay.setGridSize(game.gridRows, game.gridCols)
 
         for (row in 0 until game.gridRows) {
             for (col in 0 until game.gridCols) {
@@ -41,10 +44,12 @@ class SinglePlayerActivity : AppCompatActivity() {
 
         movesLeftTextView = findViewById<TextView>(R.id.moves_left_text_view)
         planetsFoundTextView = findViewById<TextView>(R.id.planets_founds_text_view)
+
+        refreshUITextElements(null)
     }
 
 
-    fun refreshUITextElements(cell: Cell) {
+    fun refreshUITextElements(cell: Cell?) {
         movesLeftTextView.text = getString(R.string.x_moves_left, game.movesLeft)
         planetsFoundTextView.text = getString(R.string.y_von_z_planeten_gefunden, game.planetsFound, game.planetAmount)
     }

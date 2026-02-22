@@ -12,7 +12,7 @@ class Cell @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = com.google.android.material.R.attr.materialButtonStyle
-) : MaterialButton(ContextThemeWrapper(context, R.style.GalacticaButton_Grid), attrs, defStyleAttr) {
+) : MaterialButton(ContextThemeWrapper(context, R.style.ThemeOverlay_Galactica_GridCell), attrs, defStyleAttr) {
 
     enum class CellType {
         PLANET,

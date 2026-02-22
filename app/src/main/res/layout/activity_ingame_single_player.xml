@@ -84,19 +84,28 @@
 
         </LinearLayout>
 
-        <GridLayout
-            android:id="@+id/single_player_grid"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp"
-            android:background="@color/space_blue"
-            android:columnCount="7"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:rowCount="8"
-            android:layout_weight = "1"
-            />
+            android:layout_weight="1">
+
+            <de.mstrauss.galactica.game.GridLinesOverlayView
+                android:id="@+id/single_player_grid_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp" />
+
+            <GridLayout
+                android:id="@+id/single_player_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="7"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:rowCount="8" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
