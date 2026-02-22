@@ -12,7 +12,8 @@
         <item name="materialButtonOutlinedStyle">@style/GalacticaButton.Outlined</item>
 
         <!-- If you want consistent typography in general -->
-        <!-- <item name="textAppearanceBodyLarge">@style/TextAppearance.Galactica.Body</item> -->
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Galactica.Body</item>
+        <item name="fontFamily">sans-serif-condensed-medium</item>
 
         <!-- (Optional) If you later define a full color scheme via Material 3 tokens,
              you can place those items here too. -->

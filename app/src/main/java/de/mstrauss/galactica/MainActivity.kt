@@ -1,6 +1,5 @@
 package de.mstrauss.galactica
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -58,7 +57,15 @@ class MainActivity : AppCompatActivity() {
             stateMachine.changeState((SinglePlayerPlaygroundState()))
         }
         findViewById<View>(R.id.start_single_player_game_button).setOnClickListener {
-            startActivity(Intent(this, SinglePlayerActivity::class.java))
+            startActivity(
+                SinglePlayerActivity.createIntent(
+                    context = this,
+                    gridRows = 7,
+                    gridCols = 9,
+                    planetAmount = 4,
+                    allowedMoves = 7 * 9
+                )
+            )
         }
         stateMachine.changeState(MainMenuState())
     }

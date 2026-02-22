@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import kotlin.random.Random
 
-class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null) {
+class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null, val handleRevealFlaggedField: ((Cell) -> Unit)? = null) {
     data class Coordinate(val x: Int, val y: Int)
 
     enum class GameState {
@@ -46,7 +46,7 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
     operator fun Array<Array<Cell>>.set(c: Coordinate, value: Cell) {
         this[c.y][c.x] = value
     }
-    val flagMode = false
+    var flagMode = false
 
     var state = GameState.RUNNING
         private set
@@ -120,16 +120,20 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
         return set.toList()
     }
 
-    private fun onFieldClicked(field: Cell) {
+    fun onFieldClicked(field: Cell) {
         if(state != GameState.RUNNING) return
         if(!flagMode) {
             if(!field.revealed) {
+                if(field.flagged) {
+                    handleRevealFlaggedField?.invoke(field)
+                    return
+                }
                 field.revealed = true
                 movesLeft--
                 if(field.isPlanet()) planetsFound++
             }
-        } else {
-            field.flagged = true
+        } else if (!field.revealed) {
+            field.flagged = !field.flagged
         }
 
         if(movesLeft < 0 && planetAmount != planetsFound) state = GameState.LOST

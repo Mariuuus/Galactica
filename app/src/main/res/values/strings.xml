@@ -10,7 +10,7 @@
     <string name="placeholder">N/A</string>
     <string name="x_moves_left">Noch %1$d Feldaufdeckung/en!</string>
     <string name="y_von_z_planeten_gefunden">%1$d von %2$d Planeten gefunden!</string>
-    <string name="flag_mode">Markierung EIN/AUS</string>
+    <string name="flag_mode">Markieren</string>
     <string name="single_win_title">Gewonnen!</string>
     <string name="single_win_description">Sie haben das Spiel in %1$d Feldaufdeckungen gewonnen!</string>
     <string name="single_lose_title">Verloren!</string>
@@ -20,4 +20,7 @@
     <string name="single_player_pause_reset_text">Neustart</string>
     <string name="single_player_retry_level">Erneut Spielen</string>
     <string name="single_player_resume_button">Weiterspielen</string>
+    <string name="reveal_flagged_prompt">Willst du wirklich das markierte Feld aufdecken?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 </resources>

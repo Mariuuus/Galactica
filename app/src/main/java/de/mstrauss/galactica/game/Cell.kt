@@ -20,7 +20,8 @@ class Cell @JvmOverloads constructor(
 
     enum class ContentMode {
         BUTTON,
-        TEXT
+        TEXT,
+        FLAGGED
     }
 
     enum class CellType {
@@ -62,7 +63,7 @@ class Cell @JvmOverloads constructor(
         setOnClickListener { onCellClick?.invoke(this@Cell) }
     }
 
-    private val textView = object : androidx.appcompat.widget.AppCompatTextView(context) {
+    private fun newCircleOverlayTextView() = object : androidx.appcompat.widget.AppCompatTextView(context) {
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             val size = max(measuredWidth, measuredHeight)
@@ -88,6 +89,9 @@ class Cell @JvmOverloads constructor(
         setOnClickListener { onCellClick?.invoke(this@Cell) }
     }
 
+    private val textView = newCircleOverlayTextView()
+    private val flagCircleView = newCircleOverlayTextView()
+
     var contentMode: ContentMode = ContentMode.BUTTON
         private set
 
@@ -96,6 +100,7 @@ class Cell @JvmOverloads constructor(
     init {
         addView(buttonView)
         addView(textView)
+        addView(flagCircleView)
         isClickable = true
         isFocusable = true
         setOnClickListener { onCellClick?.invoke(this) }
@@ -108,13 +113,21 @@ class Cell @JvmOverloads constructor(
         contentMode = ContentMode.BUTTON
         buttonView.visibility = VISIBLE
         textView.visibility = GONE
+        flagCircleView.visibility = GONE
     }
 
     fun showText() {
         contentMode = ContentMode.TEXT
         buttonView.visibility = GONE
         textView.visibility = VISIBLE
+        flagCircleView.visibility = GONE
+    }
 
+    fun showFlagged() {
+        contentMode = ContentMode.FLAGGED
+        buttonView.visibility = VISIBLE
+        textView.visibility = GONE
+        flagCircleView.visibility = VISIBLE
     }
 
     override fun onAttachedToWindow() {
@@ -137,16 +150,16 @@ class Cell @JvmOverloads constructor(
                 CellType.PLANET -> "P"
                 CellType.HINT -> hintNumber.toString()
             }
-        } else if (flagged) {
-            "FLAGGED"
         } else {
             ""
         }
 
         textView.text = label
 
-        if (revealed || flagged) {
+        if (revealed) {
             showText()
+        } else if (flagged) {
+            showFlagged()
         } else {
             showButton()
         }
