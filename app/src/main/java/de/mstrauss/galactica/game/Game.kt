@@ -7,6 +7,10 @@ import kotlin.random.Random
 class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null) {
     data class Coordinate(val x: Int, val y: Int)
 
+    enum class GameState {
+        RUNNING, WON, LOST
+    }
+
     var random = Random.Default
 
     companion object {
@@ -43,6 +47,9 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
         this[c.y][c.x] = value
     }
     val flagMode = false
+
+    var state = GameState.RUNNING
+        private set
 
     init {
         validateConfiguration(gridRows, gridCols, planetAmount, allowedMoves)
@@ -114,6 +121,7 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
     }
 
     private fun onFieldClicked(field: Cell) {
+        if(state != GameState.RUNNING) return
         if(!flagMode) {
             if(!field.revealed) {
                 field.revealed = true
@@ -123,6 +131,9 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
         } else {
             field.flagged = true
         }
+
+        if(movesLeft < 0 && planetAmount != planetsFound) state = GameState.LOST
+        if(planetAmount == planetsFound) state = GameState.WON
         onUIRefresh?.invoke(field)
     }
 }

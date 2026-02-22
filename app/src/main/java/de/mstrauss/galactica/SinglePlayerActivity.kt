@@ -67,9 +67,25 @@ class SinglePlayerActivity : AppCompatActivity() {
         refreshUITextElements(null)
     }
 
+    private fun hideAllModals() {
+        pauseModal.hide()
+        winModal.hide()
+        loseModal.hide()
+    }
+
 
     fun refreshUITextElements(cell: Cell?) {
         movesLeftTextView.text = getString(R.string.x_moves_left, game.movesLeft)
         planetsFoundTextView.text = getString(R.string.y_von_z_planeten_gefunden, game.planetsFound, game.planetAmount)
+
+        if(game.state == Game.GameState.WON) {
+            hideAllModals()
+            winModal.show()
+        }
+
+        if(game.state == Game.GameState.LOST) {
+            hideAllModals()
+            loseModal.show()
+        }
     }
 }
