@@ -145,20 +145,7 @@
             android:gravity="center|start"
             android:orientation="vertical"
             android:padding="10pt"
-            android:visibility="visible">
-
-            <Button
-                style="@android:style/Widget.Material.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/host_game_button"/>
-
-            <Button
-                style="@android:style/Widget.Material.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/join_game_button"/>
-        </LinearLayout>
+            android:visibility="gone"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/single_menu_layout"
@@ -191,17 +178,39 @@
             android:gravity="center|start"
             android:orientation="vertical"
             android:padding="10pt"
-            android:visibility="gone">
-
+            android:visibility="visible">
             <Button
+                android:id="@+id/host_game_button"
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/host_game_button"/>
 
             <Button
+                android:id="@+id/join_game_button"
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/join_game_button"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/black">
+            </Space>
+
+            <TextView
+                android:id="@+id/testConnectionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WAITING"/>
+
+            <Button
+                android:id="@+id/testConnectionButton"
+                style="@android:style/Widget.Material.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SEND"/>
         </LinearLayout>
 
         <LinearLayout
