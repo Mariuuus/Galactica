@@ -180,26 +180,26 @@ class PlanetView @JvmOverloads constructor(
 
                 for ((psiQsiEdge, piQiEdge) in edgesWarped.zip(edges)) {
                     //calculate center of original edge
-                    val mx1 = (piQiEdge.n1.u + piQiEdge.n2.v) * 0.5f
+                    val mx1 = (piQiEdge.n1.u + piQiEdge.n2.u) * 0.5f
                     val my1 = (piQiEdge.n1.v + piQiEdge.n2.v) * 0.5f
                     val centerPiQiEdge = Coordinate(mx1, my1)
 
                     //calculate center of warped edge
-                    val mx2 = (psiQsiEdge.n1.u + psiQsiEdge.n2.v) * 0.5f
+                    val mx2 = (psiQsiEdge.n1.u + psiQsiEdge.n2.u) * 0.5f
                     val my2 = (psiQsiEdge.n1.v + psiQsiEdge.n2.v) * 0.5f
                     val centerPsiQsiEdge = Coordinate(mx2, my2)
 
-                    //calculate displacement between centers
-                    val displacementX = centerPsiQsiEdge.x - centerPiQiEdge.x
-                    val displacementY = centerPsiQsiEdge.y - centerPiQiEdge.y
+                    // inverse mapping: output(warped) -> source(original)
+                    val displacementX = centerPiQiEdge.x - centerPsiQsiEdge.x
+                    val displacementY = centerPiQiEdge.y - centerPsiQsiEdge.y
 
-                    val dx = (p.x) - mx1
-                    val dy = (p.y) - my1
+                    val dx = p.x - mx2
+                    val dy = p.y - my2
                     val dist = sqrt (dx * dx + dy * dy)
                     val w = 1f / (1f + dist)
 
-                    val dispX = p.x + displacementX
-                    val dispY = p.y + displacementY
+                    val dispX = displacementX
+                    val dispY = displacementY
 
                     dSumX += dispX * w
                     dSumY += dispY * w
@@ -224,10 +224,10 @@ class PlanetView @JvmOverloads constructor(
         //shadow.draw(canvas)
         canvas.restore()
 
-        planetPaint.color = 0xffe50200.toInt()
-        for (edge in edgesWarped.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
-            // edge is Edge
-            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
-        }
+//        planetPaint.color = 0xffe50200.toInt()
+//        for (edge in edgesWarped.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
+//            // edge is Edge
+//            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
+//        }
     }
 }
