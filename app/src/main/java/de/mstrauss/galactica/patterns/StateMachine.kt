@@ -22,7 +22,7 @@ object AndroidLogger : Logger {
 }
 
 class MenuUi(
-    val gametitle : View,
+    val gamePlanet : View,
     val mainMenu: View,
     val singleMenu: View,
     val singlePlaygroundMenu: View,
@@ -38,7 +38,7 @@ class MenuUi(
     companion object {
         fun bind(mainActivity: AppCompatActivity): MenuUi {
             return MenuUi(
-                mainActivity.findViewById(R.id.gametitle),
+                mainActivity.findViewById(R.id.planet),
                 mainActivity.findViewById(R.id.menu_buttons_layout),
                 mainActivity.findViewById(R.id.single_menu_layout),
                 mainActivity.findViewById(R.id.single_player_playground_setting),
@@ -65,6 +65,7 @@ class MenuUi(
         campaignLevels.visibility = View.GONE
         clientLobby.visibility = View.GONE
         hostLobby.visibility = View.GONE
+        gamePlanet.visibility = View.GONE
     }
 
     fun showMainMenu() {
@@ -72,6 +73,8 @@ class MenuUi(
         mainMenu.visibility = View.VISIBLE
         settingsButton.visibility = View.VISIBLE
         subtitle.text = "Das Spiel!"
+        gamePlanet.visibility = View.VISIBLE
+
     }
 
     fun showSingleMenu() {
@@ -79,6 +82,8 @@ class MenuUi(
         singleMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
         subtitle.text = "Einzelspieler"
+        gamePlanet.visibility = View.VISIBLE
+
     }
 
     fun showSinglePlayground() {
@@ -100,6 +105,7 @@ class MenuUi(
         multiMenu.visibility = View.VISIBLE
         backButton.visibility = View.VISIBLE
         subtitle.text = "Mehrspieler"
+        gamePlanet.visibility = View.VISIBLE
     }
 
     fun showMultiHost() {
