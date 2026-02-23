@@ -80,7 +80,7 @@ class PlanetView @JvmOverloads constructor(
         sourceCanvas = Canvas(sourceBitmap)
         shadow.setBounds(0, 0, w, h)
         circlePath = Path().apply {
-            addCircle(w / 2f, h / 2f, minOf(w, h) / 2f, Path.Direction.CW)
+            addCircle(w / 2f, h / 2f, minOf(w, h) / 2.02f, Path.Direction.CW)
         }
         regeneratePlanetBitmap()
     }
@@ -177,6 +177,13 @@ class PlanetView @JvmOverloads constructor(
                 pixelBitmap[x, y] = sourceBitmap[sx, sy]
             }
         }
+    }
+
+    fun mirrorIndex(i: Int, max: Int): Int {
+        if (max <= 0) return 0
+        val period = 2 * max
+        val m = ((i % period) + period) % period   // positive modulo
+        return if (m <= max) m else period - m
     }
 
     override fun onDraw(canvas: Canvas) {
