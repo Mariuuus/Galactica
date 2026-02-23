@@ -115,30 +115,53 @@ class PlanetView @JvmOverloads constructor(
         }
 
         planetPaint.color = 0xffe50200.toInt()
-        val factor = .5f
+        val factor = .7f
 
-        val warpedMesh =
+        var warpedMesh = mesh.mapIndexed { u, array -> array.mapIndexed { v, meshNode -> MeshNode(meshNode.u + ((factor * (1/10 - Random.nextFloat()* 1/20))) , meshNode.v + ((factor * (1/10 - Random.nextFloat()* 1/20)))) } }
 
-        for (node in mesh.flatten().map { meshNode -> Coordinate(meshNode.u*width + ((factor * (1/10 - Random.nextFloat()* 1/20)) * width) , meshNode.v*width + ((factor * (1/10 - Random.nextFloat()* 1/20)) * width)) }) {
+        for (node in warpedMesh.flatten().map { n -> Coordinate(n.u * width, n.v * width) }) {
             Log.d(this::class.toString(), "x: ${node.x}, y: ${node.y}")
             canvas.drawCircle(node.x, node.y, 3.5f, planetPaint)
         }
 
-        val edges =  mesh.flatten().flatMap { meshNode ->
+        val edges = mesh.flatten().flatMap { meshNode ->
             listOf(
                 Edge(meshNode, MeshNode(meshNode.u + 1f / 9f, meshNode.v)),
                 Edge(meshNode, MeshNode(meshNode.u, meshNode.v + 1f / 9f))
             )
         }
 
-        for (edge in edges.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
+
+        val edgesWarped = warpedMesh.mapIndexed { i, row ->
+            row.mapIndexedNotNull { j, node ->
+                val edges = buildList {
+                    warpedMesh.getOrNull(i + 1)?.getOrNull(j)?.let { down ->
+                        add(Edge(node, down))
+                    }
+                    row.getOrNull(j + 1)?.let { right ->
+                        add(Edge(node, right))
+                    }
+                }
+                edges.takeIf { it.isNotEmpty() }
+            }
+        }.flatten().flatten()
+
+//        planetPaint.color = 0xfffc07ff.toInt()
+//        for (edge in edges.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
+//            // edge is Edge
+//            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
+//        }
+
+        planetPaint.color = 0xffe50200.toInt()
+        for (edge in edgesWarped.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
             // edge is Edge
             canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
         }
 
 
 
-            //https://paulbourke.net/dataformats/meshwarp/
+        //https://paulbourke.net/dataformats/meshwarp/
+        //https://davis.wpi.edu/~matt/courses/morph/2d.htm
         //canvas.
     }
 }
