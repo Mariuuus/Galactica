@@ -6,4 +6,9 @@
         <attr name="rows" format="integer" />
         <attr name="availableMoves" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="PlanetView">
+        <attr name="primaryColor" format="color"  />
+        <attr name="highlightColor" format="color" />
+    </declare-styleable>
 </resources>

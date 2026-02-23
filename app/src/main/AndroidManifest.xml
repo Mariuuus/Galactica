@@ -26,10 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Galactica">
         <activity
-            android:name=".MultiPlayerActivityHost"
-            android:exported="false" />
-        <activity
-            android:name=".MultiPlayerActivityClient"
+            android:name=".MultiPlayerActivity"
             android:exported="false" />
         <activity
             android:name=".SinglePlayerActivity"

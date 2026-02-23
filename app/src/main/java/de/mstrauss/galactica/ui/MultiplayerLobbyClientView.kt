@@ -7,8 +7,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import de.mstrauss.galactica.MultiPlayerActivityClient
-import de.mstrauss.galactica.MultiPlayerActivityHost
+import de.mstrauss.galactica.MultiPlayerActivity
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
@@ -41,12 +40,13 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
                 if(payload.start) {
                     BluetoothConnectionManager.removeListener(this)
                     context.startActivity(
-                        MultiPlayerActivityClient.createIntent(
+                        MultiPlayerActivity.createIntent(
                             context = context,
                             gridRows = payload.rows,
                             gridCols = payload.cols,
                             planetAmount = payload.planets,
-                            randomSeed = payload.timestamp
+                            randomSeed = payload.timestamp,
+                            role = BluetoothConnectionManager.Role.CLIENT
                         )
                     )
                 }
@@ -66,7 +66,7 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
 
         colsTextView = findViewById(R.id.cols_text)
         rowsTextView = findViewById(R.id.rows_text)
-        planetsTextView = findViewById(R.id.planets_text)
+        planetsTextView = findViewById(R.id.my_planets)
     }
 
     override fun onAttachedToWindow() {

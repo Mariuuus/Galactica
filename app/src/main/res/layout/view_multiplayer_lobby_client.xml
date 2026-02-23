@@ -83,7 +83,7 @@
                     android:text="Planeten:" />
 
                 <TextView
-                    android:id="@+id/planets_text"
+                    android:id="@+id/my_planets"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4" />

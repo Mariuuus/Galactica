@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import de.mstrauss.galactica.MultiPlayerActivityHost
+import de.mstrauss.galactica.MultiPlayerActivity
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
@@ -68,7 +68,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         rowsTextView = findViewById(R.id.rows_text)
         rowsSeekBar = findViewById(R.id.seek_rows)
 
-        planetsTextView = findViewById(R.id.planets_text)
+        planetsTextView = findViewById(R.id.my_planets)
         planetsSeekBar = findViewById(R.id.seek_planets)
 
         planetsSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
@@ -101,12 +101,13 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         playButton.setOnClickListener {
             val seed = System.currentTimeMillis()
             context.startActivity(
-                MultiPlayerActivityHost.createIntent(
+                MultiPlayerActivity.createIntent(
                     context = context,
                     gridRows = rowsSeekBar.progress,
                     gridCols = colsSeekBar.progress,
                     planetAmount = planetsSeekBar.progress,
-                    randomSeed = seed
+                    randomSeed = seed,
+                    role = BluetoothConnectionManager.Role.HOST
                 )
             )
         }

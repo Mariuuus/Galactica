@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload
-import kotlin.random.Random
 
 class MultiplayerGame(
     gridRows: Int = 7,
@@ -15,8 +14,8 @@ class MultiplayerGame(
     allowedMoves: Int = gridRows * gridCols,
     onUIRefresh: ((Cell?) -> Unit)? = null,
     handleRevealFlaggedField: ((Cell) -> Unit)? = null,
-    role: BluetoothConnectionManager.Role,
-    randomSeed: Long
+    val role: BluetoothConnectionManager.Role,
+    val randomSeed: Long
 ) : Game(
     gridRows,
     gridCols,
@@ -38,6 +37,8 @@ class MultiplayerGame(
             //TODO: allow clicks or so/ update UI
         }
 
+    var enemyPlanetsFound = 0
+
     val bluetoothConnectionListener = object : BluetoothConnectionManager.Listener {
         override fun onConnected(role: BluetoothConnectionManager.Role) {
         }
@@ -48,6 +49,9 @@ class MultiplayerGame(
         override fun onMessageReceived(message: String) {
             val payload = ConnectionIngamePayload.decode(message) ?: return
             Log.d(this::class.toString(), "received: $payload")
+
+            enemyPlanetsFound = payload.planetsFound
+
             if(payload.type == ConnectionIngamePayload.Type.JOINED && role == BluetoothConnectionManager.Role.HOST) {
                 multiplayerState = MultiplayerState.MY_TURN
             }
@@ -57,6 +61,8 @@ class MultiplayerGame(
             if(payload.type == ConnectionIngamePayload.Type.WON) {
                 multiplayerState = MultiplayerState.WAITING_FOR_TURN
             }
+
+            onUIRefresh?.invoke(null)
         }
 
         override fun onError(message: String) {
@@ -81,6 +87,7 @@ class MultiplayerGame(
             Toast.makeText(context, "No active Bluetooth connection.", Toast.LENGTH_SHORT).show()
             return
         }
+        onUIRefresh?.invoke(null)
     }
 
 

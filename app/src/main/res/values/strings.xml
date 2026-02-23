@@ -28,4 +28,14 @@
     <string name="join_game_button">Spiel Beitreten</string>
     <string name="wait_for_host_text">Warten auf den Host...</string>
     <string name="loading">Loading...</string>
+    <string name="separator">|</string>
+    <string name="multiplayer_my_planets_found">Planeten gefunden: %1$d/%2$d</string>
+    <string name="host" translatable="false">Host</string>
+    <string name="client" translatable="false">Client</string>
+    <string name="multiplayer_enemy_planets_found">(Gegner: %1$d/%2$d)</string>
+    <string name="my_turn">Am Zug!</string>
+    <string name="my_turn_again">Nochmal am Zug!</string>
+    <string name="not_my_turn">Der andere Spieler ist am Zug!</string>
+    <string name="joining">Laden...</string>
+
 </resources>
