@@ -9,7 +9,6 @@ import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.content.res.AppCompatResources
@@ -38,6 +37,8 @@ class PlanetView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
     private val shadow: Drawable
+    private lateinit var sourceBitmap: Bitmap
+    private lateinit var sourceCanvas: Canvas
 
 
     init {
@@ -72,48 +73,45 @@ class PlanetView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         pixelBitmap = createBitmap(w, h)
+        sourceBitmap = createBitmap(w, h)
+        sourceCanvas = Canvas(sourceBitmap)
         shadow.setBounds(0, 0, w, h)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        sourceBitmap.eraseColor(Color.TRANSPARENT)
         planetPaint.color = primaryColor
 
         val cx = width / 2f
         val cy = height / 2f
         val radius = minOf(width, height) / 2f
-        canvas.drawCircle(cx, cy, radius, planetPaint)
+        sourceCanvas.drawCircle(cx, cy, radius, planetPaint)
 
         val circlePath = Path().apply {
             addCircle(cx, cy, radius, Path.Direction.CW)
         }
-        canvas.save()
-        canvas.clipPath(circlePath)
 
-        for (i in 0..10) {
+        for (i in 0..20) {
             val randomH1 = Random.nextFloat()*2 - 1
-            val randomH2 = (randomH1 + (Random.nextFloat() * 0.6f - 0.3f)).coerceIn(-1f, 1f)
+            val randomH2 = (randomH1 + (Random.nextFloat() * 0.5f - 0.25f)).coerceIn(-1f, 1f)
 
-            highlightPaint.strokeWidth = Random.nextFloat() * (width/3)
+            highlightPaint.strokeWidth = Random.nextFloat() * (width/4)
             highlightPaint.color = ColorUtils.blendARGB(primaryColor, highlightColor, Random.nextFloat())
             drawLine(
-                canvas,
+                sourceCanvas,
                 PointF((-1 * width).toFloat(), cy + randomH1 * radius),
                 PointF((1 * width).toFloat(), cy + randomH2 * radius),
                 highlightPaint
             )
         }
 
-
-        shadow.draw(canvas)
-        canvas.restore()
-
         data class MeshNode(val u : Float, val v : Float)
         data class Edge(val n1 : MeshNode, val n2: MeshNode)
         data class Coordinate(var x : Float, var y : Float)
         data class CoordinateEdge(val n1 : Coordinate, val n2: Coordinate)
 
-        val gridSize = 5
+        val gridSize = 6
 
         var mesh = Array(gridSize, init = {u -> Array(gridSize, {v -> MeshNode((u.toFloat()/(gridSize-1)), (v.toFloat()/(gridSize-1)))})})
 
@@ -124,9 +122,9 @@ class PlanetView @JvmOverloads constructor(
 //        }
 
         planetPaint.color = 0xffe50200.toInt()
-        val factor = .4f
+        val factor = 1f
 
-        var warpedMesh = mesh.mapIndexed { u, array -> array.mapIndexed { v, meshNode -> MeshNode(meshNode.u + ((factor * ((1f/gridSize) - Random.nextFloat()* 1f/(gridSize*2)))) , meshNode.v + ((factor * ((1f/gridSize) - Random.nextFloat()* (1f/gridSize*2))))) } }
+        var warpedMesh = mesh.mapIndexed { u, array -> array.mapIndexed { v, meshNode -> MeshNode(meshNode.u + ((factor * ((1f/gridSize) - Random.nextFloat()* 1f/(gridSize*2)))) , meshNode.v + ((factor * ((1f/gridSize) - Random.nextFloat()* (1f/gridSize*2))))) } }.map { arr -> arr.map { it -> MeshNode(it.u.coerceIn(0f,1f), it.v.coerceIn(0f,1f)) } }
 
 //        for (node in warpedMesh.flatten().map { n -> Coordinate(n.u * width, n.v * width) }) {
 //            Log.d(this::class.toString(), "x: ${node.x}, y: ${node.y}")
@@ -168,111 +166,68 @@ class PlanetView @JvmOverloads constructor(
 //            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
 //        }
 //
-        planetPaint.color = 0xffe50200.toInt()
-        for (edge in edgesWarped.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
-            // edge is Edge
-            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
-        }
         //https://paulbourke.net/dataformats/meshwarp/
         //https://davis.wpi.edu/~matt/courses/morph/2d.htm
         //canvas.
 
-        fun clamp01(t: Float) = when {
-            t < 0f -> 0f
-            t > 1f -> 1f
-            else -> t
-        }
-
-        fun uvToSegment(edge: CoordinateEdge, p: Coordinate): MeshNode {
-            val ax = edge.n1.x
-            val ay = edge.n1.y
-            val bx = edge.n2.x
-            val by = edge.n2.y
-            val dx = bx - ax
-            val dy = by - ay
-            val len2 = dx * dx + dy * dy
-            if (len2 == 0f) {
-                val ex = p.x - ax
-                val ey = p.y - ay
-                val dist = kotlin.math.sqrt(ex * ex + ey * ey)
-                return MeshNode(0f, dist)
-            }
-            val px = p.x - ax
-            val py = p.y - ay
-            val t = (px * dx + py * dy) / len2
-            val u = clamp01(t)
-            val cx = ax + u * dx
-            val cy = ay + u * dy
-            val ex = p.x - cx
-            val ey = p.y - cy
-            val dist = kotlin.math.sqrt(ex * ex + ey * ey)
-            val len = kotlin.math.sqrt(len2)
-            val cross = dx * py - dy * px
-            val vLine = cross / len
-            val v = kotlin.math.sign(vLine) * dist
-            return MeshNode(u, v)
-        }
-
         for (y in 0 until pixelBitmap.height) {
             for (x in 0 until pixelBitmap.width) {
 
-                val p = Coordinate(x.toFloat(), y.toFloat())
+                val p = Coordinate(x.toFloat()/pixelBitmap.width, y.toFloat()/pixelBitmap.height)
                 var dSumX = 0f
                 var dSumY = 0f
                 var weightSum = 0f
 
                 for ((psiQsiEdge, piQiEdge) in edgesWarped.zip(edges)) {
-                    val psi = CoordinateEdge(
-                        Coordinate(psiQsiEdge.n1.u * width, psiQsiEdge.n1.v * height),
-                        Coordinate(psiQsiEdge.n2.u * width, psiQsiEdge.n2.v * height)
-                    )
-                    val pi = CoordinateEdge(
-                        Coordinate(piQiEdge.n1.u * width, piQiEdge.n1.v * height),
-                        Coordinate(piQiEdge.n2.u * width, piQiEdge.n2.v * height)
-                    )
+                    //calculate center of original edge
+                    val mx1 = (piQiEdge.n1.u + piQiEdge.n2.v) * 0.5f
+                    val my1 = (piQiEdge.n1.v + piQiEdge.n2.v) * 0.5f
+                    val centerPiQiEdge = Coordinate(mx1, my1)
 
-                    val uv = uvToSegment(psi, p)
-                    val u = uv.u
-                    val v = uv.v
+                    //calculate center of warped edge
+                    val mx2 = (psiQsiEdge.n1.u + psiQsiEdge.n2.v) * 0.5f
+                    val my2 = (psiQsiEdge.n1.v + psiQsiEdge.n2.v) * 0.5f
+                    val centerPsiQsiEdge = Coordinate(mx2, my2)
 
-                    val ax = pi.n1.x
-                    val ay = pi.n1.y
-                    val bx = pi.n2.x
-                    val by = pi.n2.y
-                    val dx = bx - ax
-                    val dy = by - ay
-                    val len2 = dx * dx + dy * dy
-                    if (len2 == 0f) continue
-                    val len = kotlin.math.sqrt(len2)
-                    val nx = -dy / len
-                    val ny = dx / len
+                    //calculate displacement between centers
+                    val displacementX = centerPsiQsiEdge.x - centerPiQiEdge.x
+                    val displacementY = centerPsiQsiEdge.y - centerPiQiEdge.y
 
-                    val mappedX = ax + u * dx + v * nx
-                    val mappedY = ay + u * dy + v * ny
-
-                    val dispX = mappedX - p.x
-                    val dispY = mappedY - p.y
-
-                    val dist = kotlin.math.abs(v)
+                    val dx = (p.x) - mx1
+                    val dy = (p.y) - my1
+                    val dist = sqrt (dx * dx + dy * dy)
                     val w = 1f / (1f + dist)
+
+                    val dispX = p.x + displacementX
+                    val dispY = p.y + displacementY
 
                     dSumX += dispX * w
                     dSumY += dispY * w
                     weightSum += w
                 }
 
-                val srcX = if (weightSum != 0f) p.x + dSumX / weightSum else p.x
-                val srcY = if (weightSum != 0f) p.y + dSumY / weightSum else p.y
+                val srcX = (if (weightSum != 0f) p.x + dSumX / weightSum else p.x) * pixelBitmap.width
+                val srcY = (if (weightSum != 0f) p.y + dSumY / weightSum else p.y) * pixelBitmap.height
 
                 val sx = srcX.toInt().coerceIn(0, pixelBitmap.width - 1)
                 val sy = srcY.toInt().coerceIn(0, pixelBitmap.height - 1)
 
-                val color = pixelBitmap[sx, sy]
+                val color = sourceBitmap[sx, sy]
                 pixelBitmap[x, y] = color
             }
         }
 
-        canvas.drawBitmap(pixelBitmap, 0f,0f,null)
+        canvas.save()
+        canvas.clipPath(circlePath)
+        //canvas.drawBitmap(sourceBitmap, 0f, 0f, null)
+        canvas.drawBitmap(pixelBitmap, 0f, 0f, null)
+        //shadow.draw(canvas)
+        canvas.restore()
 
+        planetPaint.color = 0xffe50200.toInt()
+        for (edge in edgesWarped.map { edge -> CoordinateEdge(Coordinate(edge.n1.u*width, edge.n1.v*width), Coordinate(edge.n2.u*width, edge.n2.v*width)) }) {
+            // edge is Edge
+            canvas.drawLine(edge.n1.x, edge.n1.y, edge.n2.x, edge.n2.y, planetPaint)
+        }
     }
 }
