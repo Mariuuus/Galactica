@@ -42,7 +42,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         }
 
         override fun onMessageReceived(message: String) {
-            Log.d("Bluetooth", "received message $message")
+            Log.d(this::class.toString(), "received message $message")
             val payload = ConnectionLobbyPayload.decode(message) ?: return
             post {
                 //testTextView.text = "Received: ${payload.timestamp}"

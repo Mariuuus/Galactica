@@ -3,6 +3,7 @@ package de.mstrauss.galactica
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.GridLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -87,7 +88,7 @@ class MultiPlayerActivityClient : AppCompatActivity() {
                 grid.addView(game.field[row][col])
             }
         }
-
+        Log.d(this::class.toString(), "Adding Listener")
         BluetoothConnectionManager.addListener(game.bluetoothConnectionListener)
 
         val payload = ConnectionIngamePayload(timestamp = randomSeed, type= Type.JOINED, planetAmount)

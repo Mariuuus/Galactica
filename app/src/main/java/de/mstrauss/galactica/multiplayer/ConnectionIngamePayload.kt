@@ -11,10 +11,10 @@ data class ConnectionIngamePayload(val timestamp: Long, val type: Type, val plan
     companion object {
         fun decode(raw: String): ConnectionIngamePayload? {
             val parts = raw.split(";")
-            if (parts.size != 4) return null
+            if (parts.size != 3) return null
 
             val timestamp = parts[0].toLongOrNull() ?: return null
-            val type = parts[1] ?: return null
+            val type = parts[1]
             val planetLeft = parts[2].toIntOrNull() ?: return null
 
             return ConnectionIngamePayload(

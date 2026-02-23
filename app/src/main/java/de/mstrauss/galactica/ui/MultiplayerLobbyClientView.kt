@@ -31,14 +31,15 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
         }
 
         override fun onMessageReceived(message: String) {
-            Log.d("Bluetooth", "received message $message")
             val payload = ConnectionLobbyPayload.decode(message) ?: return
+            Log.d(this::class.toString(), "received message $payload")
             post {
                 colsTextView.text = payload.cols.toString();
                 rowsTextView.text = payload.rows.toString();
                 planetsTextView.text = payload.planets.toString();
 
                 if(payload.start) {
+                    BluetoothConnectionManager.removeListener(this)
                     context.startActivity(
                         MultiPlayerActivityClient.createIntent(
                             context = context,

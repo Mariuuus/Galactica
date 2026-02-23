@@ -23,4 +23,7 @@ data class ConnectionLobbyPayload(val timestamp: Long, val rows: Int, val cols :
             )
         }
     }
+    override fun toString(): String {
+        return "$timestamp;$rows;$cols;$planets;$start"
+    }
 }

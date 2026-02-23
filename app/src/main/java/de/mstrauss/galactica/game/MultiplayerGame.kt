@@ -47,18 +47,14 @@ class MultiplayerGame(
 
         override fun onMessageReceived(message: String) {
             val payload = ConnectionIngamePayload.decode(message) ?: return
-            Log.d("Bluetooth", "received message $payload")
-            Log.d("Bluetooth", "role ${role.toString()}")
+            Log.d(this::class.toString(), "received: $payload")
             if(payload.type == ConnectionIngamePayload.Type.JOINED && role == BluetoothConnectionManager.Role.HOST) {
-                Log.d("Bluetooth", "Its my turn now! (Game started)")
                 multiplayerState = MultiplayerState.MY_TURN
             }
             if(payload.type == ConnectionIngamePayload.Type.NEXT_TURN) {
-                Log.d("Bluetooth", "Its my turn now! ")
                 multiplayerState = MultiplayerState.MY_TURN
             }
             if(payload.type == ConnectionIngamePayload.Type.WON) {
-                Log.d("Bluetooth", "The other Player won")
                 multiplayerState = MultiplayerState.WAITING_FOR_TURN
             }
         }
@@ -70,12 +66,15 @@ class MultiplayerGame(
 
     override fun onFieldClicked(field: Cell) {
         if(multiplayerState == MultiplayerState.MY_TURN || flagMode) {
-            super.onFieldClicked(field)
-            if(!flagMode) completeRound();
+            if(!field.revealed) {
+                super.onFieldClicked(field)
+                if(!flagMode && !field.isPlanet()) completeRound();
+            }
         }
     }
 
     private fun completeRound() {
+        multiplayerState = MultiplayerState.WAITING_FOR_TURN
         val payload = ConnectionIngamePayload(timestamp = System.currentTimeMillis(), type = ConnectionIngamePayload.Type.NEXT_TURN, planetsFound=planetsFound)
         val sent = BluetoothConnectionManager.send(payload.encode())
         if (!sent) {
