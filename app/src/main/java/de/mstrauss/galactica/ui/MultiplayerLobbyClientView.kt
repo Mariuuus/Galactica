@@ -2,10 +2,13 @@ package de.mstrauss.galactica.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import de.mstrauss.galactica.MultiPlayerActivityClient
+import de.mstrauss.galactica.MultiPlayerActivityHost
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
@@ -28,11 +31,24 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
         }
 
         override fun onMessageReceived(message: String) {
+            Log.d("Bluetooth", "received message $message")
             val payload = ConnectionLobbyPayload.decode(message) ?: return
             post {
                 colsTextView.text = payload.cols.toString();
                 rowsTextView.text = payload.rows.toString();
                 planetsTextView.text = payload.planets.toString();
+
+                if(payload.start) {
+                    context.startActivity(
+                        MultiPlayerActivityClient.createIntent(
+                            context = context,
+                            gridRows = payload.rows,
+                            gridCols = payload.cols,
+                            planetAmount = payload.planets,
+                            randomSeed = payload.timestamp
+                        )
+                    )
+                }
             }
         }
 

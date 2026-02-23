@@ -1,17 +1,18 @@
 package de.mstrauss.galactica.game
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import kotlin.random.Random
 
-class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null, val handleRevealFlaggedField: ((Cell) -> Unit)? = null) {
+open class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null, val handleRevealFlaggedField: ((Cell) -> Unit)? = null, randomSeed: Long?=null) {
     data class Coordinate(val x: Int, val y: Int)
 
     enum class GameState {
         RUNNING, WON, LOST
     }
 
-    var random = Random.Default
+    var random = randomSeed?.let { Random(it) } ?: Random.Default
 
     companion object {
         internal fun validateConfiguration(gridRows: Int, gridCols: Int, planetAmount: Int, allowedMoves: Int) {
@@ -52,6 +53,7 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
         private set
 
     init {
+
         validateConfiguration(gridRows, gridCols, planetAmount, allowedMoves)
 
         field = Array(gridRows) { row ->
@@ -120,7 +122,7 @@ class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, va
         return set.toList()
     }
 
-    fun onFieldClicked(field: Cell) {
+    open fun onFieldClicked(field: Cell) {
         if(state != GameState.RUNNING) return
         if(!flagMode) {
             if(!field.revealed) {

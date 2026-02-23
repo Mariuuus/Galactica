@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/space_glow"
+    tools:context=".MultiPlayerActivityClient">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/game_state"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Client"
+                android:gravity="start|center"
+                android:textColor="@color/space_blue" />
+
+            <TextView
+                android:id="@+id/planets_founds_text_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="@string/y_von_z_planeten_gefunden"
+                android:gravity="center|center"
+                android:textColor="@color/space_blue" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center|center"
+                android:weightSum="2"
+                >
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights">
+                </Space>
+
+                <Switch
+                    android:id="@+id/multiplayer_flagging_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_mode"
+                    android:textColor="@color/space_blue"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    tools:ignore="UseSwitchCompatOrMaterialXml">
+                </Switch>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights">
+                </Space>
+
+                <Button
+                    android:id="@+id/pause_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:backgroundTint="#673AB7"
+                    android:letterSpacing="0"
+                    android:minWidth="0dp"
+                    android:padding="4dp"
+                    app:icon="@android:drawable/ic_media_pause"
+                    app:iconPadding="0dp"
+                    app:iconSize="24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_weight="1">
+
+            <de.mstrauss.galactica.game.GridLinesOverlayView
+                android:id="@+id/multiplayer_grid_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp" />
+
+            <GridLayout
+                android:id="@+id/multiplayer_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="7"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:rowCount="8" />
+        </FrameLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

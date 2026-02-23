@@ -2,12 +2,14 @@ package de.mstrauss.galactica.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import de.mstrauss.galactica.MultiPlayerActivityHost
 import de.mstrauss.galactica.R
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
@@ -18,8 +20,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val testButton: Button
-    private val testTextView: TextView
+    private val playButton: Button
     private val colsTextView: TextView
     private val colsSeekBar: SeekBar
     private val rowsTextView: TextView
@@ -41,6 +42,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         }
 
         override fun onMessageReceived(message: String) {
+            Log.d("Bluetooth", "received message $message")
             val payload = ConnectionLobbyPayload.decode(message) ?: return
             post {
                 //testTextView.text = "Received: ${payload.timestamp}"
@@ -58,8 +60,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         orientation = VERTICAL
         LayoutInflater.from(context).inflate(R.layout.view_multiplayer_lobby_host, this, true)
 
-        testButton = findViewById(R.id.testConnectionButton)
-        testTextView = findViewById(R.id.testConnectionText)
+        playButton = findViewById(R.id.start_host_lobby_button)
 
         colsTextView = findViewById(R.id.cols_text)
         colsSeekBar = findViewById(R.id.seek_cols)
@@ -69,7 +70,6 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
 
         planetsTextView = findViewById(R.id.planets_text)
         planetsSeekBar = findViewById(R.id.seek_planets)
-
 
         planetsSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -98,7 +98,18 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
             override fun onStopTrackingTouch(p0: SeekBar?) {}
         })
 
-        testButton.setOnClickListener { /*TODO: add start logic in here*/ }
+        playButton.setOnClickListener {
+            val seed = System.currentTimeMillis()
+            context.startActivity(
+                MultiPlayerActivityHost.createIntent(
+                    context = context,
+                    gridRows = rowsSeekBar.progress,
+                    gridCols = colsSeekBar.progress,
+                    planetAmount = planetsSeekBar.progress,
+                    randomSeed = seed
+                )
+            )
+        }
     }
 
     override fun onAttachedToWindow() {
@@ -112,7 +123,7 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
     }
 
     private fun sendConfigUpdate() {
-        val payload = ConnectionLobbyPayload(timestamp = System.currentTimeMillis(), rows = rowsSeekBar.progress, cols= colsSeekBar.progress, planets = planetsSeekBar.progress)
+        val payload = ConnectionLobbyPayload(timestamp = System.currentTimeMillis(), rows = rowsSeekBar.progress, cols= colsSeekBar.progress, planets = planetsSeekBar.progress, start = false)
         val sent = BluetoothConnectionManager.send(payload.encode())
         if (!sent) {
             Toast.makeText(context, "No active Bluetooth connection.", Toast.LENGTH_SHORT).show()
