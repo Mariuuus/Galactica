@@ -13,10 +13,13 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.blue
 import de.mstrauss.galactica.R
 import kotlin.random.Random
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.get
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.graphics.set
 import kotlin.math.sqrt
 import androidx.core.graphics.withClip
@@ -44,13 +47,26 @@ class PlanetView @JvmOverloads constructor(
 
 
     init {
+        val fallbackPrimary = Color.argb(
+            255,
+            Random.nextInt(64, 150),
+            Random.nextInt(64, 150),
+            Random.nextInt(64, 150)
+        )
+        val fallbackHighlight = Color.argb(
+            255,
+            fallbackPrimary.red + Random.nextInt(50, 105),
+            fallbackPrimary.green + Random.nextInt(50, 105),
+            fallbackPrimary.blue + Random.nextInt(50, 105),
+        )
+
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.PlanetView,
             0, 0).apply {
             try {
-                primaryColor = getColor(R.styleable.PlanetView_primaryColor, 0xFF5E81AC.toInt())
-                highlightColor = getColor(R.styleable.PlanetView_highlightColor, 0xFF88C0D0.toInt())
+                primaryColor = getColor(R.styleable.PlanetView_primaryColor, fallbackPrimary)
+                highlightColor = getColor(R.styleable.PlanetView_highlightColor, fallbackHighlight)
             } finally {
                 recycle()
             }
@@ -96,11 +112,11 @@ class PlanetView @JvmOverloads constructor(
         val radius = minOf(bitmapW, bitmapH) / 2f
         sourceCanvas.drawCircle(cx, cy, radius*2, planetPaint)
 
-        for (i in 0..15) {
+        for (i in 0..30) {
             val randomH1 = Random.nextFloat()*2 - 1
             val randomH2 = (randomH1 + (Random.nextFloat() * 0.5f - 0.25f)).coerceIn(-1f, 1f)
 
-            highlightPaint.strokeWidth = Random.nextFloat() * (bitmapW / 4f)
+            highlightPaint.strokeWidth = Random.nextFloat() * (bitmapW / 5f)
             highlightPaint.color = ColorUtils.blendARGB(primaryColor, highlightColor, Random.nextFloat())
             drawLine(
                 sourceCanvas,
@@ -172,8 +188,11 @@ class PlanetView @JvmOverloads constructor(
                     dSumY += dispV[i] * w
                 }
 
-                val sx = ((px + dSumX) * bitmapW).toInt().coerceIn(0, maxX)
-                val sy = ((py + dSumY) * bitmapH).toInt().coerceIn(0, maxY)
+                val sx0 = ((px + dSumX) * bitmapW).toInt()
+                val sy0 = ((py + dSumY) * bitmapH).toInt()
+
+                val sx = mirrorIndex(sx0, maxX)
+                val sy = mirrorIndex(sy0, maxY)
                 pixelBitmap[x, y] = sourceBitmap[sx, sy]
             }
         }

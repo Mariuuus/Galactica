@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:minWidth="100pt"
+    android:layout_marginHorizontal="5dp"
     android:background="@color/transparent_space_glow"
+    android:minWidth="100pt"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:layout_marginHorizontal="5dp">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/level_title"
@@ -34,13 +34,11 @@
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        />
+        android:layout_height="0dp" />
 
     <Button
         android:id="@+id/play_level_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Spielen!">
-    </Button>
+        android:text="Spielen!"></Button>
 </LinearLayout>
