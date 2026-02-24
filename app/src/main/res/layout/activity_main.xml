@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="end|center"
         android:orientation="horizontal"
-        android:background="@drawable/bg"
-        >
+        android:background="@drawable/bg">
     </de.mstrauss.galactica.ui.StarfieldBackgroundView>
 
     <FrameLayout
@@ -21,20 +20,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foregroundGravity="center">
-
         <FrameLayout
             android:layout_width="400dp"
             android:layout_height="400dp"
             android:layout_gravity="end|center"
             android:layout_marginEnd="15dp"
             android:background="@drawable/glow" />
-
         <de.mstrauss.galactica.ui.PlanetView
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_gravity="end|center"
             android:layout_marginEnd="90dp" />
-
     </FrameLayout>
 
 

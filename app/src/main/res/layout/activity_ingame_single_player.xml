@@ -5,8 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/space_glow"
     tools:context=".SinglePlayerActivity">
+
+    <de.mstrauss.galactica.ui.StarfieldBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|center"
+        android:orientation="horizontal"
+        android:background="@drawable/bg">
+    </de.mstrauss.galactica.ui.StarfieldBackgroundView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +23,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/transparent_space_glow"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp"
@@ -28,9 +35,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/x_moves_left"
                 android:gravity="start|center"
-                android:textColor="@color/space_blue" />
+                android:text="@string/x_moves_left"
+                android:textColor="@color/space_glow" />
 
             <TextView
                 android:id="@+id/planets_founds_text_view"
@@ -38,9 +45,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/y_von_z_planeten_gefunden"
                 android:gravity="center|center"
-                android:textColor="@color/space_blue" />
+                android:text="@string/y_von_z_planeten_gefunden"
+                android:textColor="@color/space_glow" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -59,11 +66,12 @@
                     android:id="@+id/single_flagging_toggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/flag_mode"
-                    android:textColor="@color/space_blue"
                     android:fontFamily="sans-serif-condensed-medium"
-                    tools:ignore="UseSwitchCompatOrMaterialXml">
-                </Switch>
+                    android:text="@string/flag_mode"
+                    android:textColor="@color/space_glow"
+                    android:trackTint="#FFFFFF"
+                    tools:ignore="UseSwitchCompatOrMaterialXml"></Switch>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -73,16 +81,16 @@
 
                 <Button
                     android:id="@+id/pause_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginHorizontal="0dp"
-                    android:backgroundTint="#673AB7"
+                    android:backgroundTint="@color/space_blue"
                     android:letterSpacing="0"
                     android:minWidth="0dp"
-                    android:padding="4dp"
-                    app:icon="@android:drawable/ic_media_pause"
+                    android:padding="7dp"
+                    app:icon="@drawable/_icon_pause"
                     app:iconPadding="0dp"
-                    app:iconSize="24dp" />
+                    app:iconSize="18dp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -116,7 +124,8 @@
             android:background="@color/space_dark"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -157,17 +166,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/single_win_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/single_win_description"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/space_glow" />
 
         <Space
             android:layout_width="match_parent"
@@ -195,18 +206,20 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/single_lose_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/single_lose_description"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/space_glow" />
 
         <Space
             android:layout_width="match_parent"
@@ -234,11 +247,12 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/reveal_flagged_prompt"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
 
         <Space
             android:layout_width="match_parent"
@@ -266,11 +280,12 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/pause"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
 
         <Space
             android:layout_width="match_parent"

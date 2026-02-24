@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Spiel konfigurieren"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
         android:textStyle="bold|italic" />
 
     <Space
@@ -43,7 +44,8 @@
                 <TextView
                     android:layout_width="55dp"
                     android:layout_height="wrap_content"
-                    android:text="Spalten:" />
+                    android:text="Spalten:"
+                    android:textColor="@color/space_glow" />
 
                 <SeekBar
                     android:id="@+id/seek_cols"
@@ -53,13 +55,15 @@
                     android:max="15"
                     android:min="4"
                     android:minWidth="80dp"
-                    android:progress="9" />
+                    android:progress="9"
+                    android:progressTint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/cols_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="9" />
+                    android:text="9"
+                    android:textColor="@color/space_glow" />
             </LinearLayout>
 
             <LinearLayout
@@ -71,7 +75,8 @@
                 <TextView
                     android:layout_width="55dp"
                     android:layout_height="wrap_content"
-                    android:text="Zeilen:" />
+                    android:text="Zeilen:"
+                    android:textColor="@color/space_glow" />
 
                 <SeekBar
                     android:id="@+id/seek_rows"
@@ -81,13 +86,15 @@
                     android:max="13"
                     android:min="3"
                     android:minWidth="80dp"
-                    android:progress="7" />
+                    android:progress="7"
+                    android:progressTint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/rows_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7" />
+                    android:text="7"
+                    android:textColor="@color/space_glow" />
             </LinearLayout>
 
             <LinearLayout
@@ -99,7 +106,8 @@
                 <TextView
                     android:layout_width="55dp"
                     android:layout_height="wrap_content"
-                    android:text="Planeten:" />
+                    android:text="Planeten:"
+                    android:textColor="@color/space_glow" />
 
                 <SeekBar
                     android:id="@+id/seek_planets"
@@ -109,13 +117,15 @@
                     android:max="10"
                     android:min="1"
                     android:minWidth="80dp"
-                    android:progress="4" />
+                    android:progress="4"
+                    android:progressTint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/my_planets"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4" />
+                    android:text="4"
+                    android:textColor="@color/space_glow" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

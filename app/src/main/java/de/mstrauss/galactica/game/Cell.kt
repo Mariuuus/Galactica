@@ -130,6 +130,10 @@ class Cell @JvmOverloads constructor(
         flagCircleView.visibility = VISIBLE
     }
 
+    fun showPlanet() {
+
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -156,7 +160,9 @@ class Cell @JvmOverloads constructor(
 
         textView.text = label
 
-        if (revealed) {
+        if(isPlanet()) {
+            showPlanet()
+        } else if (revealed) {
             showText()
         } else if (flagged) {
             showFlagged()

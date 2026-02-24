@@ -96,8 +96,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 stateMachine.changeState(MainMenuState())
             }
-            showToast("Bluetooth disconnection!")
-
+            //showToast("Bluetooth disconnection!")
         }
 
         override fun onMessageReceived(message: String) = Unit
@@ -162,6 +161,7 @@ class MainActivity : AppCompatActivity() {
         stateMachine = MenuStateMachine(MenuUi.bind(this))
         multiMenuLayout = findViewById(R.id.multi_menu_layout)
         multiplayerLobbyHostLayout = findViewById(R.id.multiplayer_lobby_host)
+
         findViewById<View>(R.id.menu_singleplayer_button).setOnClickListener {
             stateMachine.changeState(SinglePlayerState())
         }
@@ -173,6 +173,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.menu_back_button_inner).setOnClickListener {
             stateMachine.changeState(MainMenuState())
+            if(BluetoothConnectionManager.isConnected()) BluetoothConnectionManager.disconnect()
         }
         findViewById<View>(R.id.single_player_playground_button).setOnClickListener {
             stateMachine.changeState((SinglePlayerPlaygroundState()))

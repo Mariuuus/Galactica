@@ -65,7 +65,7 @@ class MenuUi(
         campaignLevels.visibility = View.GONE
         clientLobby.visibility = View.GONE
         hostLobby.visibility = View.GONE
-        gamePlanet.visibility = View.GONE
+        //gamePlanet.visibility = View.GONE
     }
 
     fun showMainMenu() {
@@ -111,12 +111,14 @@ class MenuUi(
     fun showMultiHost() {
         hideAll()
         hostLobby.visibility = View.VISIBLE
+        backButton.visibility = View.VISIBLE
         subtitle.text = "Mehrspieler | Host"
     }
 
     fun showMultiClient() {
         hideAll()
         clientLobby.visibility = View.VISIBLE
+        backButton.visibility = View.VISIBLE
         subtitle.text = "Mehrspieler | Client"
     }
 
