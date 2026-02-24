@@ -5,9 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
     tools:context=".MainActivity">
 
+    <de.mstrauss.galactica.ui.StarfieldBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|center"
+        android:orientation="horizontal"
+        android:background="@drawable/bg"
+        >
+    </de.mstrauss.galactica.ui.StarfieldBackgroundView>
 
     <FrameLayout
         android:id="@+id/planet"
