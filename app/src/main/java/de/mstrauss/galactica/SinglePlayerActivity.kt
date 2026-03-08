@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
 import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
@@ -127,8 +128,15 @@ class SinglePlayerActivity : AppCompatActivity() {
             btn.setOnClickListener { exit(game.state == Game.GameState.WON) }
         }
 
-        val flaggingModeToggle = findViewById<Switch>(R.id.single_flagging_toggle)
-        flaggingModeToggle.setOnClickListener { game.flagMode = flaggingModeToggle.isChecked }
+        val flaggingModeToggle = findViewById<MaterialButton>(R.id.single_flagging_toggle)
+
+        flaggingModeToggle.addOnCheckedChangeListener { button, isChecked ->
+            button.icon = getDrawable(
+                if (isChecked) R.drawable._icon_flagtriangleright_crossed
+                else R.drawable._icon_flagtriangleright
+            )
+            game.flagMode = isChecked
+        }
 
         refreshUITextElements(null)
     }

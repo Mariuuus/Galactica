@@ -5,8 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/space_glow"
     tools:context=".MultiPlayerActivity">
+
+    <de.mstrauss.galactica.ui.StarfieldBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|center"
+        android:orientation="horizontal"
+        android:background="@drawable/bg">
+    </de.mstrauss.galactica.ui.StarfieldBackgroundView>
 
 
     <LinearLayout
@@ -17,7 +24,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/transparent_space_glow"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp"
@@ -35,7 +42,7 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     android:text="Client"
                     android:gravity="start|center"
-                    android:textColor="@color/space_blue" />
+                    android:textColor="@color/space_glow" />
 
                 <TextView
                     android:layout_width="10dp"
@@ -51,7 +58,7 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     android:text="@string/joining"
                     android:gravity="start|center"
-                    android:textColor="@color/space_blue" />
+                    android:textColor="@color/space_glow" />
             </LinearLayout>
 
             <LinearLayout
@@ -68,7 +75,7 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     android:text="@string/multiplayer_my_planets_found"
                     android:gravity="start|center"
-                    android:textColor="@color/space_blue" />
+                    android:textColor="@color/space_glow" />
 
                 <TextView
                     android:layout_width="10dp"
@@ -85,7 +92,7 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     android:text="@string/multiplayer_enemy_planets_found"
                     android:gravity="start|center"
-                    android:textColor="@color/space_blue" />
+                    android:textColor="@color/space_glow" />
             </LinearLayout>
 
             <LinearLayout
@@ -102,15 +109,24 @@
                     tools:ignore="NestedWeights">
                 </Space>
 
-                <Switch
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/multiplayer_flagging_toggle"
+                    style="@style/GalacticaButton.Danger"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:letterSpacing="0"
+                    android:minWidth="0dp"
+                    android:padding="7dp"
                     android:text="@string/flag_mode"
-                    android:textColor="@color/space_blue"
-                    android:fontFamily="sans-serif-condensed-medium"
-                    tools:ignore="UseSwitchCompatOrMaterialXml">
-                </Switch>
+                    android:textColor="@color/flag_button_text"
+                    app:backgroundTint="@color/flag_button_bg"
+                    app:icon="@drawable/_icon_flagtriangleright"
+                    app:iconPadding="4dp"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/flag_button_text"
+                    app:strokeColor="@color/flag_button_stroke" />
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -120,16 +136,16 @@
 
                 <Button
                     android:id="@+id/pause_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginHorizontal="0dp"
-                    android:backgroundTint="#673AB7"
+                    android:backgroundTint="@color/space_blue"
                     android:letterSpacing="0"
                     android:minWidth="0dp"
-                    android:padding="4dp"
-                    app:icon="@android:drawable/ic_media_pause"
+                    android:padding="7dp"
+                    app:icon="@drawable/_icon_pause"
                     app:iconPadding="0dp"
-                    app:iconSize="24dp" />
+                    app:iconSize="18dp" />
             </LinearLayout>
 
         </LinearLayout>

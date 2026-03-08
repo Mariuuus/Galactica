@@ -62,15 +62,23 @@
                     tools:ignore="NestedWeights">
                 </Space>
 
-                <Switch
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/single_flagging_toggle"
+                    style="@style/GalacticaButton.Danger"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed-medium"
+                    android:checkable="true"
+                    android:letterSpacing="0"
+                    android:minWidth="0dp"
+                    android:padding="7dp"
                     android:text="@string/flag_mode"
-                    android:textColor="@color/space_glow"
-                    android:trackTint="#FFFFFF"
-                    tools:ignore="UseSwitchCompatOrMaterialXml"></Switch>
+                    android:textColor="@color/flag_button_text"
+                    app:backgroundTint="@color/flag_button_bg"
+                    app:icon="@drawable/_icon_flagtriangleright"
+                    app:iconPadding="4dp"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/flag_button_text"
+                    app:strokeColor="@color/flag_button_stroke" />
 
                 <Space
                     android:layout_width="0dp"
