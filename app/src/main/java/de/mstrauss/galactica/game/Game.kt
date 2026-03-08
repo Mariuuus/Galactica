@@ -50,7 +50,7 @@ open class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=
     var flagMode = false
 
     var state = GameState.RUNNING
-        private set
+        internal set
 
     init {
 

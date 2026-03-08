@@ -1,8 +1,11 @@
 package de.mstrauss.galactica.game
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import de.mstrauss.galactica.MainActivity
+import de.mstrauss.galactica.MultiPlayerActivity
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload
 
@@ -44,6 +47,8 @@ class MultiplayerGame(
         }
 
         override fun onDisconnected() {
+            context.startActivity(Intent(context, MainActivity::class.java))
+            (context as MultiPlayerActivity).finish()
         }
 
         override fun onMessageReceived(message: String) {
@@ -59,14 +64,19 @@ class MultiplayerGame(
                 multiplayerState = MultiplayerState.MY_TURN
             }
             if(payload.type == ConnectionIngamePayload.Type.WON) {
-                multiplayerState = MultiplayerState.WAITING_FOR_TURN
+                state = GameState.LOST
+                onUIRefresh?.invoke(null)
+            }
+            if(payload.type == ConnectionIngamePayload.Type.REPLAY && role == BluetoothConnectionManager.Role.CLIENT) {
+                //This will only be sent if the host initiates a replay, thus we should start a new game using the context
+                (context as MultiPlayerActivity).newGame()
             }
 
             onUIRefresh?.invoke(null)
         }
 
         override fun onError(message: String) {
-
+            context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
 

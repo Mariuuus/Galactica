@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.GridLayout
 import android.widget.Switch
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
 import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
@@ -21,6 +23,7 @@ import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload
 import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload.Type
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
 import de.mstrauss.galactica.multiplayer.ConnectionPayload
+import de.mstrauss.galactica.ui.IngameModalView
 import de.mstrauss.galactica.ui.applyFullscreen
 
 class MultiPlayerActivity : AppCompatActivity() {
@@ -53,12 +56,18 @@ class MultiPlayerActivity : AppCompatActivity() {
         }
     }
 
-    lateinit var roleTextView : TextView
-    lateinit var gameStatusTextView : TextView
-    lateinit var myPlanetsTextView : TextView
-    lateinit var enemyPlanetsTextView : TextView
+    lateinit var roleTextView: TextView
+    lateinit var gameStatusTextView: TextView
+    lateinit var myPlanetsTextView: TextView
+    lateinit var enemyPlanetsTextView: TextView
 
-    lateinit var game : MultiplayerGame
+    lateinit var game: MultiplayerGame
+
+    lateinit var winModal: IngameModalView
+    lateinit var loseModal: IngameModalView
+    lateinit var pauseModal: IngameModalView
+    lateinit var revealFlaggedModal: IngameModalView
+
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +87,10 @@ class MultiPlayerActivity : AppCompatActivity() {
         val gridCols = intent.getIntExtra(EXTRA_GRID_COLS, DEFAULT_GRID_COLS)
         val planetAmount = intent.getIntExtra(EXTRA_PLANET_AMOUNT, DEFAULT_PLANET_AMOUNT)
         val randomSeed = intent.getLongExtra(EXTRA_SEED, 42)
-        val role: BluetoothConnectionManager.Role = if (intent.getStringExtra(EXTRA_ROLE) != null) BluetoothConnectionManager.Role.valueOf(intent.getStringExtra(EXTRA_ROLE)!!) else BluetoothConnectionManager.Role.CLIENT
+        val role: BluetoothConnectionManager.Role =
+            if (intent.getStringExtra(EXTRA_ROLE) != null) BluetoothConnectionManager.Role.valueOf(
+                intent.getStringExtra(EXTRA_ROLE)!!
+            ) else BluetoothConnectionManager.Role.CLIENT
 
         Log.d(this::class.toString(), "Your role is $role")
 
@@ -88,8 +100,8 @@ class MultiPlayerActivity : AppCompatActivity() {
             gridCols,
             planetAmount,
             this,
-            gridRows*gridCols,
-            {refreshUITextElements(it)},
+            gridRows * gridCols,
+            { refreshUITextElements(it) },
             {},
             role,
             randomSeed
@@ -113,12 +125,18 @@ class MultiPlayerActivity : AppCompatActivity() {
         BluetoothConnectionManager.addListener(game.bluetoothConnectionListener)
 
         // complete handshake, depending on role
-        val payload : ConnectionPayload = (if (role == BluetoothConnectionManager.Role.CLIENT)
-            ConnectionIngamePayload(timestamp = randomSeed, type= Type.JOINED, 0)
-        else ConnectionLobbyPayload(timestamp = randomSeed, rows = gridRows, cols= gridCols, planets = planetAmount, start = true))
+        val payload: ConnectionPayload = (if (role == BluetoothConnectionManager.Role.CLIENT)
+            ConnectionIngamePayload(timestamp = randomSeed, type = Type.JOINED, 0)
+        else ConnectionLobbyPayload(
+            timestamp = randomSeed,
+            rows = gridRows,
+            cols = gridCols,
+            planets = planetAmount,
+            start = true
+        ))
 
         val sent = BluetoothConnectionManager.send(payload.encode())
-        if(!sent) {
+        if (!sent) {
             //TODO: return to lobby or smth
         }
 
@@ -127,35 +145,157 @@ class MultiPlayerActivity : AppCompatActivity() {
         myPlanetsTextView = findViewById(R.id.my_planets)
         enemyPlanetsTextView = findViewById(R.id.enemies_planets)
 
-        val flaggingModeToggle = findViewById<Switch>(R.id.multiplayer_flagging_toggle)
-        flaggingModeToggle.setOnClickListener { game.flagMode = flaggingModeToggle.isChecked }
+        val flaggingModeToggle = findViewById<MaterialButton>(R.id.multiplayer_flagging_toggle)
+
+        flaggingModeToggle.addOnCheckedChangeListener { button, isChecked ->
+            button.icon = getDrawable(
+                if (isChecked) R.drawable._icon_flagtriangleright_crossed
+                else R.drawable._icon_flagtriangleright
+            )
+            game.flagMode = isChecked
+        }
 
         refreshUITextElements(null)
+
+
+        winModal = findViewById(R.id.win_modal)
+        loseModal = findViewById(R.id.lose_modal)
+        pauseModal = findViewById(R.id.pause_modal)
+        revealFlaggedModal = findViewById(R.id.reveal_flagged_cell_modal)
+
+        findViewById<Button>(R.id.pause_button).setOnClickListener { pauseModal.show() }
+        findViewById<Button>(R.id.resume_button).setOnClickListener { pauseModal.hide() }
+        findViewById<Button>(R.id.multi_won_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
+        findViewById<Button>(R.id.multi_lost_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
+        findViewById<Button>(R.id.multi_pause_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
     }
+
     fun refreshUITextElements(cell: Cell?) {
         runOnUiThread {
-            roleTextView.text = if (game.role == BluetoothConnectionManager.Role.HOST) getString(R.string.host) else getString(R.string.client)
-            myPlanetsTextView.text = getString(R.string.multiplayer_my_planets_found, game.planetsFound, game.planetAmount)
-            enemyPlanetsTextView.text = getString(R.string.multiplayer_enemy_planets_found, game.enemyPlanetsFound, game.planetAmount)
+            roleTextView.text =
+                if (game.role == BluetoothConnectionManager.Role.HOST) getString(R.string.host) else getString(
+                    R.string.client
+                )
+            myPlanetsTextView.text = getString(
+                R.string.multiplayer_my_planets_found,
+                game.planetsFound,
+                game.planetAmount
+            )
+            enemyPlanetsTextView.text = getString(
+                R.string.multiplayer_enemy_planets_found,
+                game.enemyPlanetsFound,
+                game.planetAmount
+            )
 
-            when(game.multiplayerState) {
+            when (game.multiplayerState) {
                 MultiplayerGame.MultiplayerState.MY_TURN -> {
                     gameStatusTextView.text = getString(R.string.my_turn)
-                    if(cell?.isPlanet() ?: false)
+                    if (!game.flagMode && cell?.isPlanet() ?: false)
                         gameStatusTextView.text = getString(R.string.my_turn_again)
                 }
+
                 MultiplayerGame.MultiplayerState.WAITING_FOR_TURN -> {
                     gameStatusTextView.text = getString(R.string.not_my_turn)
                 }
             }
 
             //TODO: update text
-            if(game.state == Game.GameState.WON) {
-                //TODO: won
+            if (game.state == Game.GameState.WON) {
+                hideAllModals()
+                winModal.show()
+
+                sendWinNotification();
+
+                if (game.role == BluetoothConnectionManager.Role.HOST) {
+                    findViewById<Button>(R.id.multi_won_reset_button).visibility = Button.VISIBLE;
+                    findViewById<Button>(R.id.multi_won_reset_button).setOnClickListener {
+                        replay()
+                    }
+                } else {
+                    findViewById<Button>(R.id.multi_won_reset_button).visibility = Button.GONE;
+                }
             }
-//      if(game.state == Game.GameState.LOST) {
-//          //TODO: lost
-//      }
+            if (game.state == Game.GameState.LOST) {
+                hideAllModals()
+                loseModal.show()
+
+                if (game.role == BluetoothConnectionManager.Role.HOST) {
+                    findViewById<Button>(R.id.multi_lost_reset_button).visibility = Button.VISIBLE;
+                    findViewById<Button>(R.id.multi_lost_reset_button).setOnClickListener {
+                        replay()
+                    }
+                } else {
+                    findViewById<Button>(R.id.multi_lost_reset_button).visibility = Button.GONE;
+                }
+            }
         }
+    }
+
+    fun newGame() {
+        this.startActivity(
+            createIntent(
+                context = this,
+                gridRows = game.gridRows,
+                gridCols = game.gridCols,
+                planetAmount = game.planetAmount,
+                randomSeed = game.randomSeed+1,
+                role = game.role
+            )
+        )
+        this.finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        BluetoothConnectionManager.removeListener(this.game.bluetoothConnectionListener)
+        Log.d(this::javaClass.toString(), "Hello from onDestroy!")
+    }
+
+    private fun replay() {
+        if(game.role.equals(BluetoothConnectionManager.Role.HOST)) {
+            sendReplayRequest()
+            newGame()
+        }
+    }
+
+    private fun sendWinNotification() {
+        val payload: ConnectionPayload = ConnectionIngamePayload(System.currentTimeMillis(), type = Type.WON, planetsFound = game.planetsFound)
+
+        val sent = BluetoothConnectionManager.send(payload.encode())
+        if (!sent) {
+            //TODO: return to lobby or smth
+        }
+    }
+
+    private fun sendReplayRequest() {
+        val payload: ConnectionPayload = ConnectionIngamePayload(System.currentTimeMillis(), type = Type.REPLAY, planetsFound = 0)
+
+        val sent = BluetoothConnectionManager.send(payload.encode())
+        if (!sent) {
+            //TODO: return to lobby or smth
+        }
+    }
+
+    private fun hideAllModals() {
+        pauseModal.hide()
+        winModal.hide()
+        loseModal.hide()
+        revealFlaggedModal.hide()
+    }
+
+    fun handleRevealFlaggedField(cell: Cell) {
+        hideAllModals()
+        revealFlaggedModal.show()
+        findViewById<Button>(R.id.reveal_flagged_cell_yes_button).setOnClickListener {
+            cell.flagged = false
+            hideAllModals()
+            game.onFieldClicked(cell)
+        }
+        findViewById<Button>(R.id.reveal_flagged_cell_no_button).setOnClickListener { hideAllModals() }
+    }
+
+    override fun onDetachedFromWindow() {
+        BluetoothConnectionManager.removeListener(game.bluetoothConnectionListener)
+        super.onDetachedFromWindow()
     }
 }

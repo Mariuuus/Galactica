@@ -18,6 +18,7 @@
 
     <application
         android:allowBackup="true"
+        android:appCategory="game"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/logo"
@@ -25,20 +26,31 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Galactica">
+
+        <!-- Optional temporary fallback for Android 16 large-screen compat mode.
+             Keep only if you still see orientation being ignored on some devices. -->
+        <!--
+        <property
+            android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+            android:value="true" />
+        -->
+
         <activity
             android:name=".MultiPlayerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
         <activity
             android:name=".SinglePlayerActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

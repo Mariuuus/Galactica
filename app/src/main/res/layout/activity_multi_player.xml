@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:gravity="start|center"
                     android:textAlignment="center"
-                    android:text="|">
+                    android:text="@string/separator">
                 </TextView>
                 <TextView
                     android:id="@+id/game_state"
@@ -173,5 +173,153 @@
                 android:rowCount="8" />
         </FrameLayout>
     </LinearLayout>
+
+    <de.mstrauss.galactica.ui.IngameModalView
+        android:id="@+id/win_modal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/multi_win_title"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/multi_win_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/space_glow" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/multi_won_reset_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_player_retry_level" />
+
+        <Button
+            android:id="@+id/multi_won_end_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_game_end_button_text" />
+    </de.mstrauss.galactica.ui.IngameModalView>
+
+    <de.mstrauss.galactica.ui.IngameModalView
+        android:id="@+id/lose_modal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/multi_lose_title"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/multi_lose_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/space_glow" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/multi_lost_reset_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_player_retry_level" />
+
+        <Button
+            android:id="@+id/multi_lost_end_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_game_end_button_text" />
+    </de.mstrauss.galactica.ui.IngameModalView>
+
+    <de.mstrauss.galactica.ui.IngameModalView
+        android:id="@+id/reveal_flagged_cell_modal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/reveal_flagged_prompt"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/reveal_flagged_cell_yes_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/yes" />
+
+        <Button
+            android:id="@+id/reveal_flagged_cell_no_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no" />
+    </de.mstrauss.galactica.ui.IngameModalView>
+
+    <de.mstrauss.galactica.ui.IngameModalView
+        android:id="@+id/pause_modal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/pause"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/resume_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_player_resume_button" />
+
+        <Button
+            android:id="@+id/multi_pause_end_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_game_end_button_text" />
+    </de.mstrauss.galactica.ui.IngameModalView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

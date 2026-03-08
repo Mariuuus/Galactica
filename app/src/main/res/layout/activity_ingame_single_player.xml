@@ -191,18 +191,18 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <Button
+            android:id="@+id/single_won_reset_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/single_won_reset_button"
             android:text="@string/single_player_retry_level" />
 
         <Button
+            android:id="@+id/single_won_end_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/single_won_end_button"
             android:text="@string/single_game_end_button_text" />
     </de.mstrauss.galactica.ui.IngameModalView>
 

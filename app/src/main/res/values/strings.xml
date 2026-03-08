@@ -37,5 +37,12 @@
     <string name="my_turn_again">Nochmal am Zug!</string>
     <string name="not_my_turn">Der andere Spieler ist am Zug!</string>
     <string name="joining">Laden...</string>
+    <string name="multi_player_resume_button">Weiterspielen</string>
+    <string name="multi_game_end_button_text">Beenden</string>
+    <string name="multi_win_title">Gewonnen!</string>
+    <string name="multi_win_description">Tja, da wird sich Ihr/e Gegner/in wohl ärgern...</string>
+    <string name="multi_player_retry_level">Erneut Spielen</string>
+    <string name="multi_lose_description">Arg... Das ist aber ärgerlich!</string>
+    <string name="multi_lose_title">Verloren!</string>
 
 </resources>
