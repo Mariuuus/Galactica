@@ -68,6 +68,8 @@ class MultiPlayerActivity : AppCompatActivity() {
     lateinit var pauseModal: IngameModalView
     lateinit var revealFlaggedModal: IngameModalView
 
+    private var winNotificationSent = false
+
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +104,7 @@ class MultiPlayerActivity : AppCompatActivity() {
             this,
             gridRows * gridCols,
             { refreshUITextElements(it) },
-            {},
+            {handleRevealFlaggedField(it)},
             role,
             randomSeed
         )
@@ -155,9 +157,6 @@ class MultiPlayerActivity : AppCompatActivity() {
             game.flagMode = isChecked
         }
 
-        refreshUITextElements(null)
-
-
         winModal = findViewById(R.id.win_modal)
         loseModal = findViewById(R.id.lose_modal)
         pauseModal = findViewById(R.id.pause_modal)
@@ -168,6 +167,9 @@ class MultiPlayerActivity : AppCompatActivity() {
         findViewById<Button>(R.id.multi_won_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
         findViewById<Button>(R.id.multi_lost_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
         findViewById<Button>(R.id.multi_pause_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
+
+        hideAllModals()
+        refreshUITextElements(null)
     }
 
     fun refreshUITextElements(cell: Cell?) {
@@ -204,7 +206,10 @@ class MultiPlayerActivity : AppCompatActivity() {
                 hideAllModals()
                 winModal.show()
 
-                sendWinNotification();
+                if (!winNotificationSent) {
+                    winNotificationSent = true
+                    sendWinNotification()
+                }
 
                 if (game.role == BluetoothConnectionManager.Role.HOST) {
                     findViewById<Button>(R.id.multi_won_reset_button).visibility = Button.VISIBLE;
@@ -248,7 +253,6 @@ class MultiPlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         BluetoothConnectionManager.removeListener(this.game.bluetoothConnectionListener)
-        Log.d(this::javaClass.toString(), "Hello from onDestroy!")
     }
 
     private fun replay() {

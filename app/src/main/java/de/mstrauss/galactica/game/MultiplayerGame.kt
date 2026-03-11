@@ -53,19 +53,21 @@ class MultiplayerGame(
 
         override fun onMessageReceived(message: String) {
             val payload = ConnectionIngamePayload.decode(message) ?: return
-            Log.d(this::class.toString(), "received: $payload")
+            Log.d(this::class.java.toString(), "received: $payload")
 
             enemyPlanetsFound = payload.planetsFound
 
             if(payload.type == ConnectionIngamePayload.Type.JOINED && role == BluetoothConnectionManager.Role.HOST) {
                 multiplayerState = MultiplayerState.MY_TURN
             }
+            if(payload.type == ConnectionIngamePayload.Type.PLANET_FOUND) {
+                //multiplayerState = MultiplayerState.MY_TURN
+            }
             if(payload.type == ConnectionIngamePayload.Type.NEXT_TURN) {
                 multiplayerState = MultiplayerState.MY_TURN
             }
             if(payload.type == ConnectionIngamePayload.Type.WON) {
                 state = GameState.LOST
-                onUIRefresh?.invoke(null)
             }
             if(payload.type == ConnectionIngamePayload.Type.REPLAY && role == BluetoothConnectionManager.Role.CLIENT) {
                 //This will only be sent if the host initiates a replay, thus we should start a new game using the context
@@ -84,14 +86,18 @@ class MultiplayerGame(
         if(multiplayerState == MultiplayerState.MY_TURN || flagMode) {
             if(!field.revealed) {
                 super.onFieldClicked(field)
-                if(!flagMode && !field.isPlanet()) completeRound();
+                if(!flagMode && !field.flagged) completeRound(field.isPlanet());
             }
         }
     }
 
-    private fun completeRound() {
-        multiplayerState = MultiplayerState.WAITING_FOR_TURN
+    private fun completeRound(foundPlanet: Boolean) {
         val payload = ConnectionIngamePayload(timestamp = System.currentTimeMillis(), type = ConnectionIngamePayload.Type.NEXT_TURN, planetsFound=planetsFound)
+        if (foundPlanet) {
+            payload.type = ConnectionIngamePayload.Type.PLANET_FOUND
+        } else {
+            multiplayerState = MultiplayerState.WAITING_FOR_TURN
+        }
         val sent = BluetoothConnectionManager.send(payload.encode())
         if (!sent) {
             Toast.makeText(context, "No active Bluetooth connection.", Toast.LENGTH_SHORT).show()

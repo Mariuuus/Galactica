@@ -5,9 +5,9 @@ interface ConnectionPayload {
     fun encode(): String
 }
 
-data class ConnectionIngamePayload(val timestamp: Long, val type: Type, val planetsFound: Int) : ConnectionPayload {
+data class ConnectionIngamePayload(val timestamp: Long, var type: Type, val planetsFound: Int) : ConnectionPayload {
     enum class Type {
-        JOINED, WON, NEXT_TURN, REPLAY
+        JOINED, WON, NEXT_TURN, PLANET_FOUND, REPLAY
     }
 
     override fun encode(): String = "$timestamp;${type.toString()};$planetsFound"
