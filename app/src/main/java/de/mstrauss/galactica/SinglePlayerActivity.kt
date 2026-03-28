@@ -16,7 +16,9 @@ import com.google.android.material.button.MaterialButton
 import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
+import de.mstrauss.galactica.ui.BombItemButtonView
 import de.mstrauss.galactica.ui.IngameModalView
+import de.mstrauss.galactica.ui.RocketshipItemButtonView
 import de.mstrauss.galactica.ui.applyFullscreen
 
 class SinglePlayerActivity : AppCompatActivity() {
@@ -138,6 +140,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             game.flagMode = isChecked
         }
 
+        findViewById<BombItemButtonView>(R.id.item_button_bomb).game = game
+        findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship).game = game
         refreshUITextElements(null)
     }
 

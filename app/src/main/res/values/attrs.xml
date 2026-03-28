@@ -11,4 +11,9 @@
         <attr name="primaryColor" format="color"  />
         <attr name="highlightColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="ItemButtonView">
+        <attr name="itemIcon" format="reference" />
+        <attr name="itemCount" format="integer" />
+    </declare-styleable>
 </resources>

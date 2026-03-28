@@ -36,75 +36,20 @@
                 android:paddingBottom="8pt">
             </TextView>
 
-            <FrameLayout
+            <de.mstrauss.galactica.ui.BombItemButtonView
+                android:id="@+id/item_button_bomb"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:itemIcon="@drawable/_icon_item_bomb"
+                app:itemCount="0"
+                android:layout_marginBottom="8pt"/>
 
-                <Button
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginHorizontal="0dp"
-                    android:backgroundTint="@color/white"
-                    android:letterSpacing="0"
-                    android:minWidth="0dp"
-                    android:padding="7dp"
-                    app:icon="@drawable/_icon_item_bomb"
-                    app:iconPadding="0dp"
-                    app:iconSize="20dp"
-                    app:iconTint="@color/space_dark" />
-                <FrameLayout
-                    android:layout_width="8pt"
-                    android:layout_height="8pt"
-                    android:layout_gravity="bottom|end"
-                    android:background="@drawable/actually_rounded_rectangle"
-                    android:backgroundTint="@color/space_glow"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="99"
-                        android:textSize="6pt"
-                        android:textAlignment="center"
-                        android:textColor="@color/space_dark"
-                        >
-                    </TextView>
-                </FrameLayout>
-            </FrameLayout>
-
-            <FrameLayout
+            <de.mstrauss.galactica.ui.RocketshipItemButtonView
+                android:id="@+id/item_button_rocketship"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginHorizontal="0dp"
-                    android:backgroundTint="@color/white"
-                    android:letterSpacing="0"
-                    android:minWidth="0dp"
-                    android:padding="7dp"
-                    app:icon="@drawable/_icon_item_rocketship"
-                    app:iconPadding="0dp"
-                    app:iconSize="20dp"
-                    app:iconTint="@color/space_dark" />
-                <FrameLayout
-                    android:layout_width="8pt"
-                    android:layout_height="8pt"
-                    android:layout_gravity="bottom|end"
-                    android:background="@drawable/actually_rounded_rectangle"
-                    android:backgroundTint="@color/space_glow"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="99"
-                        android:textSize="6pt"
-                        android:textAlignment="center"
-                        android:textColor="@color/space_dark"
-                        >
-                    </TextView>
-                </FrameLayout>
-            </FrameLayout>
+                android:layout_height="wrap_content"
+                app:itemIcon="@drawable/_icon_item_rocketship"
+                app:itemCount="0" />
 
 
         </LinearLayout>
