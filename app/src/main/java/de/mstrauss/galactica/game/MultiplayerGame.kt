@@ -27,6 +27,7 @@ class MultiplayerGame(
     allowedMoves,
     onUIRefresh,
     handleRevealFlaggedField,
+    null,
     randomSeed
 ) {
 

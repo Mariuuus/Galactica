@@ -16,4 +16,8 @@
         <attr name="itemIcon" format="reference" />
         <attr name="itemCount" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="BombView">
+        <attr name="durationSeconds" format="integer" />
+    </declare-styleable>
 </resources>

@@ -163,6 +163,12 @@
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:rowCount="8" />
+
+                <de.mstrauss.galactica.ui.BombView
+                    android:id="@+id/bomb_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:durationSeconds="10" />
             </FrameLayout>
 
             <LinearLayout
@@ -361,5 +367,4 @@
             android:id="@+id/single_pause_end_button"
             android:text="@string/single_game_end_button_text" />
     </de.mstrauss.galactica.ui.IngameModalView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

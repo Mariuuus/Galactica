@@ -1,11 +1,19 @@
 package de.mstrauss.galactica.game
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import kotlin.random.Random
 
-open class Game(val gridRows: Int=7, val gridCols: Int=9, val planetAmount: Int=4, val context: Context, val allowedMoves: Int=gridRows*gridCols, val onUIRefresh: ((Cell?) -> Unit)? = null, val handleRevealFlaggedField: ((Cell) -> Unit)? = null, randomSeed: Long?=null) {
+open class Game(
+    val gridRows: Int =7,
+    val gridCols: Int =9,
+    val planetAmount: Int =4,
+    val context: Context,
+    val allowedMoves: Int =gridRows*gridCols,
+    val onUIRefresh: ((Cell?) -> Unit)? = null,
+    val handleRevealFlaggedField: ((Cell) -> Unit)? = null,
+    val bombItem: (() -> Unit)? = null,
+    randomSeed: Long? =null) {
     data class Coordinate(val x: Int, val y: Int)
 
     enum class GameState {

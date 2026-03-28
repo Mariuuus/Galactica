@@ -12,5 +12,6 @@ class BombItemButtonView @JvmOverloads constructor(
 
     override fun onItemUsed(game: Game) {
         // TODO: implement bomb item logic
+        game.bombItem?.invoke()
     }
 }

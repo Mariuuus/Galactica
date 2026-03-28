@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridLayout
-import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +16,7 @@ import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
 import de.mstrauss.galactica.ui.BombItemButtonView
+import de.mstrauss.galactica.ui.BombView
 import de.mstrauss.galactica.ui.IngameModalView
 import de.mstrauss.galactica.ui.RocketshipItemButtonView
 import de.mstrauss.galactica.ui.applyFullscreen
@@ -85,8 +85,12 @@ class SinglePlayerActivity : AppCompatActivity() {
             allowedMoves = allowedMoves,
             context = this,
             onUIRefresh = { refreshUITextElements(it) },
-            handleRevealFlaggedField = { handleRevealFlaggedField(it) }
+            handleRevealFlaggedField = { handleRevealFlaggedField(it) },
+            bombItem = { findViewById<BombView>(R.id.bomb_container).start() }
         )
+
+        findViewById<BombItemButtonView>(R.id.item_button_bomb).game = game
+        findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship).game = game
 
         val grid = findViewById<GridLayout>(R.id.single_player_grid)
         val gridOverlay = findViewById<GridLinesOverlayView>(R.id.single_player_grid_overlay)
@@ -140,8 +144,7 @@ class SinglePlayerActivity : AppCompatActivity() {
             game.flagMode = isChecked
         }
 
-        findViewById<BombItemButtonView>(R.id.item_button_bomb).game = game
-        findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship).game = game
+
         refreshUITextElements(null)
     }
 
