@@ -12,6 +12,9 @@ class BombItemButtonView @JvmOverloads constructor(
 
     override fun onItemUsed(game: Game) {
         // TODO: implement bomb item logic
-        game.bombItem?.invoke()
+        if(game.state != Game.GameState.RUNNING || game.bombItemAmount < 1) return
+        game.startBombItem?.invoke(game)
+        game.bombItemAmount--
+        game.onUIRefresh?.invoke(null)
     }
 }

@@ -159,11 +159,28 @@ class Cell @JvmOverloads constructor(
 
     var onCellClick: ((Cell) -> Unit)? = null
 
+    var highlighted: Boolean = false
+        set(value) {
+            field = value
+            highlightOverlay.visibility = if (value) VISIBLE else INVISIBLE
+        }
+
+    private val highlightOverlay = FrameLayout(context).apply {
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        setBackgroundColor(Color.argb(80, 0x5B, 0xC0, 0xEB)) // space_glow at ~30% alpha
+        visibility = INVISIBLE
+        isClickable = false
+    }
+
+    fun highlight() { highlighted = true }
+    fun dehighlight() { highlighted = false }
+
     init {
         addView(buttonView)
         addView(planetView)
         addView(textView)
         addView(flagView)
+        addView(highlightOverlay) // topmost so it overlays any content mode
         isClickable = true
         isFocusable = true
         setOnClickListener { onCellClick?.invoke(this) }

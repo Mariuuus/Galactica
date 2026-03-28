@@ -8,16 +8,18 @@ open class Game(
     val gridRows: Int =7,
     val gridCols: Int =9,
     val planetAmount: Int =4,
+    var bombItemAmount: Int =1,
+    val rocketshipItemAmount: Int =1,
     val context: Context,
     val allowedMoves: Int =gridRows*gridCols,
     val onUIRefresh: ((Cell?) -> Unit)? = null,
     val handleRevealFlaggedField: ((Cell) -> Unit)? = null,
-    val bombItem: (() -> Unit)? = null,
+    val startBombItem: ((Game) -> Unit)? = null,
     randomSeed: Long? =null) {
     data class Coordinate(val x: Int, val y: Int)
 
     enum class GameState {
-        RUNNING, WON, LOST
+        RUNNING, BLOCKED, WON, LOST
     }
 
     var random = randomSeed?.let { Random(it) } ?: Random.Default
@@ -146,8 +148,28 @@ open class Game(
             field.flagged = !field.flagged
         }
 
-        if(movesLeft < 0 && planetAmount != planetsFound) state = GameState.LOST
+        if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
         if(planetAmount == planetsFound) state = GameState.WON
         onUIRefresh?.invoke(field)
     }
-}
+
+
+    open fun useBomb(positions : List<Pair<Int, Int>>) {
+        if(state != GameState.BLOCKED) return
+        positions.forEach { (row, col) ->
+            var cell = field[row][col]
+            if(!cell.flagged && !cell.revealed){
+                cell.revealed = true
+                if(cell.isPlanet()) planetsFound++
+                onUIRefresh?.invoke(cell)
+            }
+            cell.dehighlight()
+        }
+        movesLeft--
+
+        state = GameState.RUNNING
+
+        if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
+        if(planetAmount == planetsFound) state = GameState.WON
+        onUIRefresh?.invoke(null)
+    }}

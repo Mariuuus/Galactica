@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
@@ -26,24 +27,32 @@ class SinglePlayerActivity : AppCompatActivity() {
         private const val EXTRA_GRID_ROWS = "extra_grid_rows"
         private const val EXTRA_GRID_COLS = "extra_grid_cols"
         private const val EXTRA_PLANET_AMOUNT = "extra_planet_amount"
+        private const val EXTRA_BOMB_ITEM_AMOUNT = "extra_bombs_amount"
+        private const val EXTRA_ROCKETSHIP_ITEM_AMOUNT = "extra_rocketship_amount"
         private const val EXTRA_ALLOWED_MOVES = "extra_allowed_moves"
         private const val EXTRA_WON = "extra_won"
 
         private const val DEFAULT_GRID_ROWS = 7
         private const val DEFAULT_GRID_COLS = 9
         private const val DEFAULT_PLANET_AMOUNT = 4
+        private const val DEFAULT_BOMB_ITEM_AMOUNT = 0
+        private const val DEFAULT_ROCKETSHIP_ITEM_AMOUNT = 0
 
         fun createIntent(
             context: Context,
             gridRows: Int = DEFAULT_GRID_ROWS,
             gridCols: Int = DEFAULT_GRID_COLS,
             planetAmount: Int = DEFAULT_PLANET_AMOUNT,
+            bombAmount: Int = DEFAULT_BOMB_ITEM_AMOUNT,
+            rocketshipAmount: Int = DEFAULT_ROCKETSHIP_ITEM_AMOUNT,
             allowedMoves: Int = gridRows * gridCols
         ): Intent = Intent(context, SinglePlayerActivity::class.java).apply {
             putExtra(EXTRA_GRID_ROWS, gridRows)
             putExtra(EXTRA_GRID_COLS, gridCols)
             putExtra(EXTRA_PLANET_AMOUNT, planetAmount)
             putExtra(EXTRA_ALLOWED_MOVES, allowedMoves)
+            putExtra(EXTRA_BOMB_ITEM_AMOUNT, bombAmount)
+            putExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, rocketshipAmount)
         }
     }
 
@@ -59,6 +68,9 @@ class SinglePlayerActivity : AppCompatActivity() {
     lateinit var resumeButton: Button
     lateinit var pauseButton: Button
 
+    lateinit var bombItem: BombItemButtonView
+    lateinit var rocketshipItem: RocketshipItemButtonView
+
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,9 +85,11 @@ class SinglePlayerActivity : AppCompatActivity() {
             insets
         }
 
-        val gridRows = intent.getIntExtra(EXTRA_GRID_ROWS, DEFAULT_GRID_ROWS)
-        val gridCols = intent.getIntExtra(EXTRA_GRID_COLS, DEFAULT_GRID_COLS)
+        var gridRows = intent.getIntExtra(EXTRA_GRID_ROWS, DEFAULT_GRID_ROWS)
+        var gridCols = intent.getIntExtra(EXTRA_GRID_COLS, DEFAULT_GRID_COLS)
         val planetAmount = intent.getIntExtra(EXTRA_PLANET_AMOUNT, DEFAULT_PLANET_AMOUNT)
+        val bombAmount = intent.getIntExtra(EXTRA_BOMB_ITEM_AMOUNT, DEFAULT_BOMB_ITEM_AMOUNT)
+        val rocketshipAmount = intent.getIntExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, DEFAULT_ROCKETSHIP_ITEM_AMOUNT)
         val allowedMoves = intent.getIntExtra(EXTRA_ALLOWED_MOVES, gridRows * gridCols)
 
         game = Game(
@@ -83,14 +97,30 @@ class SinglePlayerActivity : AppCompatActivity() {
             gridCols = gridCols,
             planetAmount = planetAmount,
             allowedMoves = allowedMoves,
+            bombItemAmount = bombAmount,
+            rocketshipItemAmount = rocketshipAmount,
             context = this,
             onUIRefresh = { refreshUITextElements(it) },
             handleRevealFlaggedField = { handleRevealFlaggedField(it) },
-            bombItem = { findViewById<BombView>(R.id.bomb_container).start() }
+            startBombItem = { findViewById<BombView>(R.id.bomb_container).start(game) }
         )
 
-        findViewById<BombItemButtonView>(R.id.item_button_bomb).game = game
-        findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship).game = game
+        bombItem = findViewById<BombItemButtonView>(R.id.item_button_bomb)
+        rocketshipItem = findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship)
+        bombItem.game = game
+        rocketshipItem.game = game
+
+        findViewById<BombView>(R.id.bomb_container).apply {
+            this.gridRows = game.gridRows
+            this.gridCols = game.gridCols
+            this.gridPaddingPx = (10 * resources.displayMetrics.density)
+            onNearestCellsChanged = { cells ->
+                Log.d("HIGHLIGHTING", cells.joinToString { (i, i1) -> "($i,$i1)" })
+                // Dehighlight all, then highlight the 4 nearest cells
+                for (row in game.field) row.forEach { it.dehighlight() }
+                cells.forEach { (row, col) -> game.field[row][col].highlight() }
+            }
+        }
 
         val grid = findViewById<GridLayout>(R.id.single_player_grid)
         val gridOverlay = findViewById<GridLinesOverlayView>(R.id.single_player_grid_overlay)
@@ -168,6 +198,9 @@ class SinglePlayerActivity : AppCompatActivity() {
             hideAllModals()
             loseModal.show()
         }
+
+        bombItem.itemCount = game.bombItemAmount
+        rocketshipItem.itemCount = game.rocketshipItemAmount
     }
 
     fun handleRevealFlaggedField(cell: Cell) {

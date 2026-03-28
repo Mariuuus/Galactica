@@ -101,6 +101,9 @@ class MultiPlayerActivity : AppCompatActivity() {
             gridRows,
             gridCols,
             planetAmount,
+            //TODO: fix this here
+            0,
+            0,
             this,
             gridRows * gridCols,
             { refreshUITextElements(it) },

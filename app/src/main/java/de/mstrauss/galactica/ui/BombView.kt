@@ -5,19 +5,23 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RadialGradient
 import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Choreographer
 import android.view.Surface
 import android.view.View
 import android.view.WindowManager
 import androidx.core.graphics.drawable.toBitmap
 import de.mstrauss.galactica.R
+import de.mstrauss.galactica.game.Game
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
@@ -27,18 +31,26 @@ class BombView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), SensorEventListener {
 
-    var durationSeconds: Int = 10
+    var durationSeconds: Int = 6
+
+    /** Grid dimensions — set these before calling start(). */
+    var gridRows: Int = 0
+    var gridCols: Int = 0
 
     /**
-     * Called when the countdown reaches zero.
-     * @param xFraction  0..1 relative to view width (left=0, right=1)
-     * @param yFraction  0..1 relative to view height (top=0, bottom=1)
-     * @param xPixel     absolute pixel x inside the view
-     * @param yPixel     absolute pixel y inside the view
+     * Padding (px) that the GridLayout applies on all sides.
+     * Used to align ball coordinates with cell indices.
      */
-    var onTimerExpired: ((xFraction: Float, yFraction: Float, xPixel: Float, yPixel: Float) -> Unit)? = null
+    var gridPaddingPx: Float = 0f
 
-    fun start() {
+    /**
+     * Fired every physics tick when the set of 4 nearest cells changes.
+     * Each pair is (row, col) in game.field coordinates.
+     * Called with an empty list when the bomb stops.
+     */
+    var onNearestCellsChanged: ((cells: List<Pair<Int, Int>>) -> Unit)? = null
+
+    fun start(game: Game) {
         if (isRunning) return
         ballX = width / 2f
         ballY = height / 2f
@@ -46,8 +58,11 @@ class BombView @JvmOverloads constructor(
         velY = 0f
         timeLeftMs = durationSeconds * 1000L
         lastFrameNanos = 0L
+        lastNearestCells = emptyList()
         isRunning = true
         visibility = VISIBLE
+        this.game = game
+        game.state = Game.GameState.BLOCKED
 
         // Capture rotation once so onSensorChanged can remap axes correctly
         @Suppress("DEPRECATION")
@@ -65,6 +80,10 @@ class BombView @JvmOverloads constructor(
         sensorManager.unregisterListener(this)
         choreographer.removeFrameCallback(frameCallback)
         visibility = INVISIBLE
+        if (lastNearestCells.isNotEmpty()) {
+            lastNearestCells = emptyList()
+            onNearestCellsChanged?.invoke(emptyList())
+        }
     }
 
     // ----- internals -----
@@ -74,6 +93,9 @@ class BombView @JvmOverloads constructor(
 
     private val ballSizePx = (40 * resources.displayMetrics.density)
     private val ballBitmap: Bitmap
+    private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private lateinit var game: Game
 
     private var ballX = 0f
     private var ballY = 0f
@@ -87,6 +109,7 @@ class BombView @JvmOverloads constructor(
     private var timeLeftMs = 0L
     private var lastFrameNanos = 0L
     private var isRunning = false
+    private var lastNearestCells: List<Pair<Int, Int>> = emptyList()
 
     private val timerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
@@ -200,6 +223,8 @@ class BombView @JvmOverloads constructor(
             ballY = newY
         }
 
+        updateNearestCells()
+
         // Tick timer
         timeLeftMs = (timeLeftMs - (dt * 1000).toLong()).coerceAtLeast(0)
         if (timeLeftMs == 0L) {
@@ -210,9 +235,48 @@ class BombView @JvmOverloads constructor(
             val px = ballX
             val py = ballY
             post {
-                onTimerExpired?.invoke(xFrac, yFrac, px, py)
+                // timer expired:
+                game.useBomb(lastNearestCells)
                 visibility = INVISIBLE
             }
+        }
+    }
+
+    // ----- nearest-cell tracking -----
+
+    private fun updateNearestCells() {
+        Log.d("test", "test")
+        if (gridRows <= 0 || gridCols <= 0 || width <= 0 || height <= 0) return
+
+        Log.d("test", "test")
+
+        val effectiveW = width - 2f * gridPaddingPx
+        val effectiveH = height - 2f * gridPaddingPx
+        if (effectiveW <= 0f || effectiveH <= 0f) return
+
+        val cellW = effectiveW / gridCols
+        val cellH = effectiveH / gridRows
+
+        // Shift ball position into grid-local coordinates
+        val localX = ballX - gridPaddingPx
+        val localY = ballY - gridPaddingPx
+
+        // Find the top-left corner of the 2×2 block whose cell-centres are
+        // closest to the ball. Subtracting 0.5 cell and flooring gives the
+        // column/row of the nearest inter-cell boundary to the left/above.
+        val leftCol = (localX / cellW - 0.5f).toInt().coerceIn(0, gridCols - 2)
+        val topRow  = (localY / cellH - 0.5f).toInt().coerceIn(0, gridRows - 2)
+
+        val newCells = listOf(
+            Pair(topRow,     leftCol),
+            Pair(topRow,     leftCol + 1),
+            Pair(topRow + 1, leftCol),
+            Pair(topRow + 1, leftCol + 1)
+        )
+
+        if (newCells != lastNearestCells) {
+            lastNearestCells = newCells
+            onNearestCellsChanged?.invoke(newCells)
         }
     }
 
@@ -238,6 +302,14 @@ class BombView @JvmOverloads constructor(
         canvas.drawText(timerText, cx, timerY, timerPaint)
 
         val ballRadius = ballSizePx / 2f
+        val glowRadius = ballRadius * 2.5f
+        glowPaint.shader = RadialGradient(
+            ballX, ballY, glowRadius,
+            Color.argb(100, 0xA9, 0x9B, 0x45),
+            Color.argb(0,   0x89, 0x2D, 0x2D),
+            Shader.TileMode.CLAMP
+        )
+        canvas.drawCircle(ballX, ballY, glowRadius, glowPaint)
         canvas.drawBitmap(ballBitmap, ballX - ballRadius, ballY - ballRadius, null)
     }
 

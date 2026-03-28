@@ -31,6 +31,8 @@ constructor(private val ctx: Context, private val attributeSet: AttributeSet? = 
         val cols: Int
         val number: Int
         val planets: Int
+        val bombs: Int
+        val rocketships: Int
         val availableMoves: Int
 
         context.theme.obtainStyledAttributes(
@@ -42,6 +44,8 @@ constructor(private val ctx: Context, private val attributeSet: AttributeSet? = 
                 cols = getInteger(R.styleable.LevelCard_columns, 9)
                 number = getInteger(R.styleable.LevelCard_LevelNumber, -1)
                 planets = getInteger(R.styleable.LevelCard_planetAmount, 4)
+                bombs = getInteger(R.styleable.LevelCard_bombs, 0)
+                rocketships = getInteger(R.styleable.LevelCard_rocketships, 0)
                 availableMoves = getInteger(R.styleable.LevelCard_availableMoves, rows*cols)
             } finally {
                 recycle()
@@ -54,7 +58,7 @@ constructor(private val ctx: Context, private val attributeSet: AttributeSet? = 
         playButton = findViewById(R.id.play_level_button)
 
         levelTitleTextView.text = "Level $number"
-        descriptionTextView.text = "Cols: $cols\nRows: $rows\nPlanets: $planets\nAvalailableMoves: $availableMoves"
+        descriptionTextView.text = "Cols: $cols\nRows: $rows\nPlanets: $planets\nAvalailableMoves: $availableMoves\nBombs: $bombs\nRocketships: $rocketships"
         playButton.setOnClickListener {
             ctx.startActivity(
                 SinglePlayerActivity.createIntent(
