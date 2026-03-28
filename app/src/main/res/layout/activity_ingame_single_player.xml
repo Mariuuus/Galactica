@@ -18,152 +18,250 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:background="@color/transparent_space_glow"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="3">
-
+            android:orientation="vertical"
+            android:padding="4dp">
             <TextView
-                android:id="@+id/moves_left_text_view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="start|center"
-                android:text="@string/x_moves_left"
-                android:textColor="@color/space_glow" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Items:"
+                android:textColor="@color/space_glow"
+                android:paddingBottom="8pt">
+            </TextView>
 
-            <TextView
-                android:id="@+id/planets_founds_text_view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center|center"
-                android:text="@string/y_von_z_planeten_gefunden"
-                android:textColor="@color/space_glow" />
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:gravity="center|center"
-                android:weightSum="2"
-                >
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    tools:ignore="NestedWeights">
-                </Space>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/single_flagging_toggle"
-                    style="@style/GalacticaButton.Danger"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:letterSpacing="0"
-                    android:minWidth="0dp"
-                    android:padding="7dp"
-                    android:text="@string/flag_mode"
-                    android:textColor="@color/flag_button_text"
-                    app:backgroundTint="@color/flag_button_bg"
-                    app:icon="@drawable/_icon_flagtriangleright"
-                    app:iconPadding="4dp"
-                    app:iconSize="18dp"
-                    app:iconTint="@color/flag_button_text"
-                    app:strokeColor="@color/flag_button_stroke" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    tools:ignore="NestedWeights">
-                </Space>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/pause_button"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginHorizontal="0dp"
-                    android:backgroundTint="@color/space_blue"
+                    android:backgroundTint="@color/white"
                     android:letterSpacing="0"
                     android:minWidth="0dp"
                     android:padding="7dp"
-                    app:icon="@drawable/_icon_pause"
+                    app:icon="@drawable/_icon_item_bomb"
                     app:iconPadding="0dp"
-                    app:iconSize="18dp" />
+                    app:iconSize="20dp"
+                    app:iconTint="@color/space_dark" />
+                <FrameLayout
+                    android:layout_width="8pt"
+                    android:layout_height="8pt"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/actually_rounded_rectangle"
+                    android:backgroundTint="@color/space_glow"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="99"
+                        android:textSize="6pt"
+                        android:textAlignment="center"
+                        android:textColor="@color/space_dark"
+                        >
+                    </TextView>
+                </FrameLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:backgroundTint="@color/white"
+                    android:letterSpacing="0"
+                    android:minWidth="0dp"
+                    android:padding="7dp"
+                    app:icon="@drawable/_icon_item_rocketship"
+                    app:iconPadding="0dp"
+                    app:iconSize="20dp"
+                    app:iconTint="@color/space_dark" />
+                <FrameLayout
+                    android:layout_width="8pt"
+                    android:layout_height="8pt"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/actually_rounded_rectangle"
+                    android:backgroundTint="@color/space_glow"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="99"
+                        android:textSize="6pt"
+                        android:textAlignment="center"
+                        android:textColor="@color/space_dark"
+                        >
+                    </TextView>
+                </FrameLayout>
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent_space_glow"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/moves_left_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:gravity="start|center"
+                    android:text="@string/x_moves_left"
+                    android:textColor="@color/space_glow" />
+
+                <TextView
+                    android:id="@+id/planets_founds_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:gravity="center|center"
+                    android:text="@string/y_von_z_planeten_gefunden"
+                    android:textColor="@color/space_glow" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center|center"
+                    android:weightSum="2"
+                    >
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
+                    </Space>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/single_flagging_toggle"
+                        style="@style/GalacticaButton.Danger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:letterSpacing="0"
+                        android:minWidth="0dp"
+                        android:padding="7dp"
+                        android:text="@string/flag_mode"
+                        android:textColor="@color/flag_button_text"
+                        app:backgroundTint="@color/flag_button_bg"
+                        app:icon="@drawable/_icon_flagtriangleright"
+                        app:iconPadding="4dp"
+                        app:iconSize="18dp"
+                        app:iconTint="@color/flag_button_text"
+                        app:strokeColor="@color/flag_button_stroke" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights">
+                    </Space>
+
+                    <Button
+                        android:id="@+id/pause_button"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginHorizontal="0dp"
+                        android:backgroundTint="@color/space_blue"
+                        android:letterSpacing="0"
+                        android:minWidth="0dp"
+                        android:padding="7dp"
+                        app:icon="@drawable/_icon_pause"
+                        app:iconPadding="0dp"
+                        app:iconSize="18dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="1">
+
+                <de.mstrauss.galactica.game.GridLinesOverlayView
+                    android:id="@+id/single_player_grid_overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp" />
+
+                <GridLayout
+                    android:id="@+id/single_player_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnCount="7"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:rowCount="8" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/space_dark"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="@string/placeholder"
+                    android:textAlignment="textStart"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="@string/placeholder"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="@string/placeholder"
+                    android:textAlignment="textEnd"
+                    android:textColor="#FFFFFF" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="10dp"
-            android:layout_weight="1">
-
-            <de.mstrauss.galactica.game.GridLinesOverlayView
-                android:id="@+id/single_player_grid_overlay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp" />
-
-            <GridLayout
-                android:id="@+id/single_player_grid"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnCount="7"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:rowCount="8" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/space_dark"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/placeholder"
-                android:textAlignment="textStart"
-                android:textColor="#FFFFFF" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/placeholder"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="@string/placeholder"
-                android:textAlignment="textEnd"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
 
     </LinearLayout>
+
 
     <de.mstrauss.galactica.ui.IngameModalView
         android:id="@+id/win_modal"
