@@ -12,9 +12,9 @@ class RocketshipItemButtonView @JvmOverloads constructor(
 
     override fun onItemUsed(game: Game) {
         // TODO: implement rocketship item logic
-        if(game.state != Game.GameState.RUNNING || game.rocketshipItemAmount < 1) return
+        if(game.state != Game.GameState.RUNNING || game.rocketShipItemLeft < 1) return
         game.startRocketshipItem?.invoke(game)
-        game.rocketshipItemAmount--
+        game.rocketShipItemLeft--
         game.onUIRefresh?.invoke(null)
 
     }

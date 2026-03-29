@@ -27,14 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Galactica">
 
-        <!-- Optional temporary fallback for Android 16 large-screen compat mode.
-             Keep only if you still see orientation being ignored on some devices. -->
-        <!--
-        <property
-            android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
-            android:value="true" />
-        -->
-
         <activity
             android:name=".MultiPlayerActivity"
             android:exported="false"

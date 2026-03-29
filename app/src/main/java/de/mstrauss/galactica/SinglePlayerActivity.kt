@@ -205,8 +205,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             loseModal.show()
         }
 
-        bombItem.itemCount = game.bombItemAmount
-        rocketshipItem.itemCount = game.rocketshipItemAmount
+        bombItem.itemCount = game.bombItemLeft
+        rocketshipItem.itemCount = game.rocketShipItemLeft
     }
 
     fun handleRevealFlaggedField(cell: Cell) {
@@ -227,6 +227,8 @@ class SinglePlayerActivity : AppCompatActivity() {
                 gridRows = game.gridRows,
                 gridCols = game.gridCols,
                 planetAmount = game.planetAmount,
+                bombAmount = game.bombItemAmount,
+                rocketshipAmount = game.rocketshipItemAmount,
                 allowedMoves = game.allowedMoves
             )
         )

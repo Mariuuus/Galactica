@@ -8,8 +8,8 @@ open class Game(
     val gridRows: Int =7,
     val gridCols: Int =9,
     val planetAmount: Int =4,
-    var bombItemAmount: Int =1,
-    var rocketshipItemAmount: Int =1,
+    val bombItemAmount: Int =1,
+    val rocketshipItemAmount: Int =1,
     val context: Context,
     val allowedMoves: Int =gridRows*gridCols,
     val onUIRefresh: ((Cell?) -> Unit)? = null,
@@ -48,6 +48,8 @@ open class Game(
 
 
     var movesLeft = allowedMoves
+    var bombItemLeft = bombItemAmount
+    var rocketShipItemLeft = rocketshipItemAmount
     var planetsFound = 0
 
     var field: Array<Array<Cell>>
