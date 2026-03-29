@@ -122,10 +122,20 @@ class SinglePlayerActivity : AppCompatActivity() {
         }
 
         findViewById<RocketshipItemView>(R.id.rocketship_container).apply {
-            this.game = game
-            onActivated = { g ->
-                // TODO: call g.useRocketship() or similar once implemented
+            this.gridRows = game.gridRows
+            this.gridCols = game.gridCols
+            this.gridPaddingPx = (10 * resources.displayMetrics.density)
+            onHighlightCellsChanged = { cells ->
+                for (row in game.field) row.forEach { it.dehighlight() }
+                cells.forEach { (row, col) -> game.field[row][col].highlight() }
             }
+            onActivated = { g, cells ->
+                g.useRocketship(cells)
+            }
+        }
+
+        game.onBlockedCellClick = { cell ->
+            findViewById<RocketshipItemView>(R.id.rocketship_container).selectCell(cell.posY, cell.posX)
         }
 
         val grid = findViewById<GridLayout>(R.id.single_player_grid)

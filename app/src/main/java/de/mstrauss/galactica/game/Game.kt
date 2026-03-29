@@ -65,6 +65,8 @@ open class Game(
     var state = GameState.RUNNING
         internal set
 
+    var onBlockedCellClick: ((Cell) -> Unit)? = null
+
     init {
 
         validateConfiguration(gridRows, gridCols, planetAmount, allowedMoves)
@@ -136,7 +138,10 @@ open class Game(
     }
 
     open fun onFieldClicked(field: Cell) {
-        if(state != GameState.RUNNING) return
+        if(state != GameState.RUNNING) {
+            if(state == GameState.BLOCKED) onBlockedCellClick?.invoke(field)
+            return
+        }
         if(!flagMode) {
             if(!field.revealed) {
                 if(field.flagged) {
@@ -156,6 +161,26 @@ open class Game(
         onUIRefresh?.invoke(field)
     }
 
+
+    open fun useRocketship(positions: List<Pair<Int, Int>>) {
+        if(state != GameState.BLOCKED) return
+        positions.forEach { (row, col) ->
+            val cell = field[row][col]
+            if(!cell.flagged && !cell.revealed){
+                cell.revealed = true
+                if(cell.isPlanet()) planetsFound++
+                onUIRefresh?.invoke(cell)
+            }
+            cell.dehighlight()
+        }
+        movesLeft--
+
+        state = GameState.RUNNING
+
+        if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
+        if(planetAmount == planetsFound) state = GameState.WON
+        onUIRefresh?.invoke(null)
+    }
 
     open fun useBomb(positions : List<Pair<Int, Int>>) {
         if(state != GameState.BLOCKED) return

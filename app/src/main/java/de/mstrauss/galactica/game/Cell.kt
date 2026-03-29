@@ -165,8 +165,12 @@ class Cell @JvmOverloads constructor(
             highlightOverlay.visibility = if (value) VISIBLE else INVISIBLE
         }
 
+    private val highlightPaddingPx = (3 * resources.displayMetrics.density).toInt()
+
     private val highlightOverlay = FrameLayout(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
+            setMargins(highlightPaddingPx, highlightPaddingPx, highlightPaddingPx, highlightPaddingPx)
+        }
         setBackgroundColor(Color.argb(80, 0x5B, 0xC0, 0xEB)) // space_glow at ~30% alpha
         visibility = INVISIBLE
         isClickable = false
