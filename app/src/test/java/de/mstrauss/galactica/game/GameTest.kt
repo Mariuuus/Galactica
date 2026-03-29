@@ -85,7 +85,7 @@ class GameInstrumentedTest {
 
     @org.junit.Test
     fun testPlanetDuplicateCoordinateBruteForce() {
-        val game = Game(2,2,3, context)
+        val game = Game(2,2,3, 0,0,context)
         (0..100).forEach { _ ->
             var planetCount = 0
             for (y in 0..1){

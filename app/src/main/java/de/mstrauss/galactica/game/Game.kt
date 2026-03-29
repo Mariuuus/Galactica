@@ -201,4 +201,5 @@ open class Game(
         if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
         if(planetAmount == planetsFound) state = GameState.WON
         onUIRefresh?.invoke(null)
-    }}
+    }
+}

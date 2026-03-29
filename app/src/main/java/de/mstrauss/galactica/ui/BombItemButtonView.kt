@@ -12,7 +12,6 @@ class BombItemButtonView @JvmOverloads constructor(
 ) : ItemButtonView(context, attrs, defStyleAttr) {
 
     override fun onItemUsed(game: Game) {
-        // TODO: implement bomb item logic
         if(game.state != Game.GameState.RUNNING || game.bombItemLeft < 1) return
         if(game is MultiplayerGame && (game).multiplayerState != MultiplayerGame.MultiplayerState.MY_TURN) return
         game.startBombItem?.invoke(game)
