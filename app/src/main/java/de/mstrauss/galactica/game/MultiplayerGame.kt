@@ -96,6 +96,9 @@ class MultiplayerGame(
                 super.onFieldClicked(field)
                 if(!flagMode && !field.flagged) completeRound(field.isPlanet());
             }
+        } else if(state == GameState.BLOCKED) {
+            onBlockedCellClick?.invoke(field)
+            return
         }
     }
 

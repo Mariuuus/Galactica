@@ -159,6 +159,10 @@ class MultiPlayerActivity : AppCompatActivity() {
             }
         }
 
+        game.onBlockedCellClick = { cell ->
+            findViewById<RocketshipItemView>(R.id.rocketship_container).selectCell(cell.posY, cell.posX)
+        }
+
         // setup grid view
         val grid = findViewById<GridLayout>(R.id.multiplayer_grid)
         val gridOverlay = findViewById<GridLinesOverlayView>(R.id.multiplayer_grid_overlay)
