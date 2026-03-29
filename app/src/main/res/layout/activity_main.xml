@@ -103,6 +103,7 @@
                     android:layout_height="match_parent"
                     app:LevelNumber="2"
                     app:availableMoves="26"
+                    app:bombs="1"
                     app:columns="7"
                     app:planetAmount="5"
                     app:rows="5" />
@@ -130,8 +131,10 @@
                     android:layout_height="match_parent"
                     app:LevelNumber="5"
                     app:availableMoves="26"
+                    app:bombs="2"
                     app:columns="14"
                     app:planetAmount="8"
+                    app:rocketships="1"
                     app:rows="11" />
 
             </LinearLayout>

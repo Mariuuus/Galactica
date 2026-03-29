@@ -9,12 +9,13 @@ open class Game(
     val gridCols: Int =9,
     val planetAmount: Int =4,
     var bombItemAmount: Int =1,
-    val rocketshipItemAmount: Int =1,
+    var rocketshipItemAmount: Int =1,
     val context: Context,
     val allowedMoves: Int =gridRows*gridCols,
     val onUIRefresh: ((Cell?) -> Unit)? = null,
     val handleRevealFlaggedField: ((Cell) -> Unit)? = null,
     val startBombItem: ((Game) -> Unit)? = null,
+    val startRocketshipItem: ((Game) -> Unit)? = null,
     randomSeed: Long? =null) {
     data class Coordinate(val x: Int, val y: Int)
 

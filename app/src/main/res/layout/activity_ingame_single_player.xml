@@ -164,11 +164,16 @@
                     android:padding="10dp"
                     android:rowCount="8" />
 
-                <de.mstrauss.galactica.ui.BombView
+                <de.mstrauss.galactica.ui.BombItemView
                     android:id="@+id/bomb_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:durationSeconds="10" />
+
+                <de.mstrauss.galactica.ui.RocketshipItemView
+                    android:id="@+id/rocketship_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </FrameLayout>
 
             <LinearLayout

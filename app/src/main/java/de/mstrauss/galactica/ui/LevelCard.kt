@@ -66,6 +66,8 @@ constructor(private val ctx: Context, private val attributeSet: AttributeSet? = 
                     gridRows = rows,
                     gridCols = cols,
                     planetAmount = planets,
+                    bombAmount = bombs,
+                    rocketshipAmount = rocketships,
                     allowedMoves = availableMoves
                 )
             )

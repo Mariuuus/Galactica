@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
@@ -17,7 +16,8 @@ import de.mstrauss.galactica.game.Cell
 import de.mstrauss.galactica.game.Game
 import de.mstrauss.galactica.game.GridLinesOverlayView
 import de.mstrauss.galactica.ui.BombItemButtonView
-import de.mstrauss.galactica.ui.BombView
+import de.mstrauss.galactica.ui.BombItemView
+import de.mstrauss.galactica.ui.RocketshipItemView
 import de.mstrauss.galactica.ui.IngameModalView
 import de.mstrauss.galactica.ui.RocketshipItemButtonView
 import de.mstrauss.galactica.ui.applyFullscreen
@@ -102,7 +102,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             context = this,
             onUIRefresh = { refreshUITextElements(it) },
             handleRevealFlaggedField = { handleRevealFlaggedField(it) },
-            startBombItem = { findViewById<BombView>(R.id.bomb_container).start(game) }
+            startBombItem = { findViewById<BombItemView>(R.id.bomb_container).start(game) },
+            startRocketshipItem = { findViewById<RocketshipItemView>(R.id.rocketship_container).start(game) }
         )
 
         bombItem = findViewById<BombItemButtonView>(R.id.item_button_bomb)
@@ -110,15 +111,20 @@ class SinglePlayerActivity : AppCompatActivity() {
         bombItem.game = game
         rocketshipItem.game = game
 
-        findViewById<BombView>(R.id.bomb_container).apply {
+        findViewById<BombItemView>(R.id.bomb_container).apply {
             this.gridRows = game.gridRows
             this.gridCols = game.gridCols
             this.gridPaddingPx = (10 * resources.displayMetrics.density)
             onNearestCellsChanged = { cells ->
-                Log.d("HIGHLIGHTING", cells.joinToString { (i, i1) -> "($i,$i1)" })
-                // Dehighlight all, then highlight the 4 nearest cells
                 for (row in game.field) row.forEach { it.dehighlight() }
                 cells.forEach { (row, col) -> game.field[row][col].highlight() }
+            }
+        }
+
+        findViewById<RocketshipItemView>(R.id.rocketship_container).apply {
+            this.game = game
+            onActivated = { g ->
+                // TODO: call g.useRocketship() or similar once implemented
             }
         }
 
