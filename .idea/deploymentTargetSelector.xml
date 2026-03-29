@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Marius\.android\avd\Phone_1_2.avd" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=3200fa3d5aedb5d5" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Marius\.android\avd\Phone_2.avd" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=710KPNY0476663" />
               </handle>
             </Target>
           </targets>

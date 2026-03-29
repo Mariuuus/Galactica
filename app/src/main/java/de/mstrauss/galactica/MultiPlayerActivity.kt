@@ -119,13 +119,14 @@ class MultiPlayerActivity : AppCompatActivity() {
             gridRows,
             gridCols,
             planetAmount,
-            //TODO: fix this here
             bombAmount,
             rocketshipAmount,
             this,
             gridRows * gridCols,
             { refreshUITextElements(it) },
             {handleRevealFlaggedField(it)},
+            startBombItem = { findViewById<BombItemView>(R.id.bomb_container).start(game) },
+            startRocketshipItem = { findViewById<RocketshipItemView>(R.id.rocketship_container).start(game) },
             role,
             randomSeed
         )

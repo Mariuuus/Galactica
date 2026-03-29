@@ -19,6 +19,8 @@ class MultiplayerGame(
     allowedMoves: Int = gridRows * gridCols,
     onUIRefresh: ((Cell?) -> Unit)? = null,
     handleRevealFlaggedField: ((Cell) -> Unit)? = null,
+    startBombItem: ((Game) -> Unit)? = null,
+    startRocketshipItem: ((Game) -> Unit)? = null,
     val role: BluetoothConnectionManager.Role,
     val randomSeed: Long
 ) : Game(
@@ -31,8 +33,8 @@ class MultiplayerGame(
     allowedMoves,
     onUIRefresh,
     handleRevealFlaggedField,
-    null,
-    null,
+    startBombItem,
+    startRocketshipItem,
     randomSeed
 ) {
 
@@ -89,12 +91,24 @@ class MultiplayerGame(
     }
 
     override fun onFieldClicked(field: Cell) {
-        if(multiplayerState == MultiplayerState.MY_TURN || flagMode) {
+        if(state == GameState.RUNNING && multiplayerState == MultiplayerState.MY_TURN || flagMode) {
             if(!field.revealed) {
                 super.onFieldClicked(field)
                 if(!flagMode && !field.flagged) completeRound(field.isPlanet());
             }
         }
+    }
+
+    override fun useBomb(positions: List<Pair<Int, Int>>) {
+        if (state != GameState.BLOCKED) return
+        super.useBomb(positions)
+        completeRound(false)
+    }
+
+    override fun useRocketship(positions: List<Pair<Int, Int>>) {
+        if (state != GameState.BLOCKED) return
+        super.useRocketship(positions)
+        completeRound(false)
     }
 
     private fun completeRound(foundPlanet: Boolean) {

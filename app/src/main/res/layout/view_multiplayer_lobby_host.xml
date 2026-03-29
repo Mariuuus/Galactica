@@ -42,7 +42,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="75dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="Spalten:"
                         android:textColor="@color/space_glow" />
@@ -73,7 +73,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="75dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="Zeilen:"
                         android:textColor="@color/space_glow" />
@@ -104,7 +104,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="75dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="Planeten:"
                         android:textColor="@color/space_glow" />
@@ -148,7 +148,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="75dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="Bomben:"
                         android:textColor="@color/space_glow" />
@@ -179,7 +179,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="75dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="Raumschiffe:"
                         android:textColor="@color/space_glow" />

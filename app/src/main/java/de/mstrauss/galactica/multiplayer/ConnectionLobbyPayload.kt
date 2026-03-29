@@ -1,7 +1,7 @@
 package de.mstrauss.galactica.multiplayer
 
 data class ConnectionLobbyPayload(val timestamp: Long, val rows: Int, val cols : Int, val planets: Int, val bombs: Int, val rocketShips: Int, val start: Boolean)  : ConnectionPayload {
-    override fun encode(): String = "$timestamp;$rows;$cols;$planets;$bombs;$rocketShips$start"
+    override fun encode(): String = "$timestamp;$rows;$cols;$planets;$bombs;$rocketShips;$start"
 
     companion object {
         fun decode(raw: String): ConnectionLobbyPayload? {
@@ -28,6 +28,6 @@ data class ConnectionLobbyPayload(val timestamp: Long, val rows: Int, val cols :
         }
     }
     override fun toString(): String {
-        return "$timestamp;$rows;$cols;$planets;$bombs;$rocketShips$start"
+        return "$timestamp;$rows;$cols;$planets;$bombs;$rocketShips;$start"
     }
 }
