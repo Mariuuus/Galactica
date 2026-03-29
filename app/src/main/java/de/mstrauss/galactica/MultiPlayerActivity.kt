@@ -23,7 +23,11 @@ import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload
 import de.mstrauss.galactica.multiplayer.ConnectionIngamePayload.Type
 import de.mstrauss.galactica.multiplayer.ConnectionLobbyPayload
 import de.mstrauss.galactica.multiplayer.ConnectionPayload
+import de.mstrauss.galactica.ui.BombItemButtonView
+import de.mstrauss.galactica.ui.BombItemView
 import de.mstrauss.galactica.ui.IngameModalView
+import de.mstrauss.galactica.ui.RocketshipItemButtonView
+import de.mstrauss.galactica.ui.RocketshipItemView
 import de.mstrauss.galactica.ui.applyFullscreen
 
 class MultiPlayerActivity : AppCompatActivity() {
@@ -33,6 +37,8 @@ class MultiPlayerActivity : AppCompatActivity() {
         private const val EXTRA_GRID_ROWS = "extra_grid_rows"
         private const val EXTRA_GRID_COLS = "extra_grid_cols"
         private const val EXTRA_PLANET_AMOUNT = "extra_planet_amount"
+        private const val EXTRA_BOMB_ITEM_AMOUNT = "extra_bombs_amount"
+        private const val EXTRA_ROCKETSHIP_ITEM_AMOUNT = "extra_rocketship_amount"
         private const val EXTRA_SEED = "extra_seed"
         private const val EXTRA_ROLE = "extra_role"
 
@@ -40,11 +46,16 @@ class MultiPlayerActivity : AppCompatActivity() {
         private const val DEFAULT_GRID_COLS = 9
         private const val DEFAULT_PLANET_AMOUNT = 4
 
+        private const val DEFAULT_BOMB_ITEM_AMOUNT = 0
+        private const val DEFAULT_ROCKETSHIP_ITEM_AMOUNT = 0
+
         fun createIntent(
             context: Context,
             gridRows: Int,
             gridCols: Int,
             planetAmount: Int,
+            bombAmount: Int = DEFAULT_BOMB_ITEM_AMOUNT,
+            rocketshipAmount: Int = DEFAULT_ROCKETSHIP_ITEM_AMOUNT,
             randomSeed: Long,
             role: BluetoothConnectionManager.Role
         ): Intent = Intent(context, MultiPlayerActivity::class.java).apply {
@@ -52,6 +63,8 @@ class MultiPlayerActivity : AppCompatActivity() {
             putExtra(EXTRA_GRID_COLS, gridCols)
             putExtra(EXTRA_PLANET_AMOUNT, planetAmount)
             putExtra(EXTRA_SEED, randomSeed)
+            putExtra(EXTRA_BOMB_ITEM_AMOUNT, bombAmount)
+            putExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, rocketshipAmount)
             putExtra(EXTRA_ROLE, role.toString())
         }
     }
@@ -67,6 +80,9 @@ class MultiPlayerActivity : AppCompatActivity() {
     lateinit var loseModal: IngameModalView
     lateinit var pauseModal: IngameModalView
     lateinit var revealFlaggedModal: IngameModalView
+
+    lateinit var bombItem: BombItemButtonView
+    lateinit var rocketshipItem: RocketshipItemButtonView
 
     private var winNotificationSent = false
 
@@ -89,6 +105,8 @@ class MultiPlayerActivity : AppCompatActivity() {
         val gridCols = intent.getIntExtra(EXTRA_GRID_COLS, DEFAULT_GRID_COLS)
         val planetAmount = intent.getIntExtra(EXTRA_PLANET_AMOUNT, DEFAULT_PLANET_AMOUNT)
         val randomSeed = intent.getLongExtra(EXTRA_SEED, 42)
+        val bombAmount = intent.getIntExtra(EXTRA_BOMB_ITEM_AMOUNT, DEFAULT_BOMB_ITEM_AMOUNT)
+        val rocketshipAmount = intent.getIntExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, DEFAULT_ROCKETSHIP_ITEM_AMOUNT)
         val role: BluetoothConnectionManager.Role =
             if (intent.getStringExtra(EXTRA_ROLE) != null) BluetoothConnectionManager.Role.valueOf(
                 intent.getStringExtra(EXTRA_ROLE)!!
@@ -102,8 +120,8 @@ class MultiPlayerActivity : AppCompatActivity() {
             gridCols,
             planetAmount,
             //TODO: fix this here
-            0,
-            0,
+            bombAmount,
+            rocketshipAmount,
             this,
             gridRows * gridCols,
             { refreshUITextElements(it) },
@@ -111,6 +129,34 @@ class MultiPlayerActivity : AppCompatActivity() {
             role,
             randomSeed
         )
+
+        bombItem = findViewById<BombItemButtonView>(R.id.item_button_bomb)
+        rocketshipItem = findViewById<RocketshipItemButtonView>(R.id.item_button_rocketship)
+        bombItem.game = game
+        rocketshipItem.game = game
+
+        findViewById<BombItemView>(R.id.bomb_container).apply {
+            this.gridRows = game.gridRows
+            this.gridCols = game.gridCols
+            this.gridPaddingPx = (10 * resources.displayMetrics.density)
+            onNearestCellsChanged = { cells ->
+                for (row in game.field) row.forEach { it.dehighlight() }
+                cells.forEach { (row, col) -> game.field[row][col].highlight() }
+            }
+        }
+
+        findViewById<RocketshipItemView>(R.id.rocketship_container).apply {
+            this.gridRows = game.gridRows
+            this.gridCols = game.gridCols
+            this.gridPaddingPx = (10 * resources.displayMetrics.density)
+            onHighlightCellsChanged = { cells ->
+                for (row in game.field) row.forEach { it.dehighlight() }
+                cells.forEach { (row, col) -> game.field[row][col].highlight() }
+            }
+            onActivated = { g, cells ->
+                g.useRocketship(cells)
+            }
+        }
 
         // setup grid view
         val grid = findViewById<GridLayout>(R.id.multiplayer_grid)
@@ -137,6 +183,8 @@ class MultiPlayerActivity : AppCompatActivity() {
             rows = gridRows,
             cols = gridCols,
             planets = planetAmount,
+            bombs = bombAmount,
+            rocketShips = rocketshipAmount,
             start = true
         ))
 
@@ -204,6 +252,9 @@ class MultiPlayerActivity : AppCompatActivity() {
                 }
             }
 
+            bombItem.itemCount = game.bombItemLeft
+            rocketshipItem.itemCount = game.rocketShipItemLeft
+
             //TODO: update text
             if (game.state == Game.GameState.WON) {
                 hideAllModals()
@@ -246,6 +297,8 @@ class MultiPlayerActivity : AppCompatActivity() {
                 gridRows = game.gridRows,
                 gridCols = game.gridCols,
                 planetAmount = game.planetAmount,
+                bombAmount = game.bombItemAmount,
+                rocketshipAmount = game.rocketshipItemAmount,
                 randomSeed = game.randomSeed+1,
                 role = game.role
             )

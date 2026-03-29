@@ -52,6 +52,7 @@ open class Game(
     var rocketShipItemLeft = rocketshipItemAmount
     var planetsFound = 0
 
+
     var field: Array<Array<Cell>>
 
     operator fun Array<Array<Cell>>.get(c: Coordinate): Cell =

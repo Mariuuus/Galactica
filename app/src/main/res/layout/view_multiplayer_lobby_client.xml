@@ -19,10 +19,6 @@
         android:textColor="@color/white"
         android:textStyle="bold|italic" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +39,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="55dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Spalten:"
                     android:textColor="@color/space_glow" />
@@ -63,7 +59,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="55dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Zeilen:"
                     android:textColor="@color/space_glow" />
@@ -83,7 +79,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="55dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Planeten:"
                     android:textColor="@color/space_glow" />
@@ -95,13 +91,49 @@
                     android:text="4"
                     android:textColor="@color/space_glow" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Bomben:"
+                    android:textColor="@color/space_glow" />
+
+                <TextView
+                    android:id="@+id/bombs_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:textColor="@color/space_glow" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Rocketships:"
+                    android:textColor="@color/space_glow" />
+
+                <TextView
+                    android:id="@+id/rocketship_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="@color/space_glow" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp">
-    </Space>
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -28,6 +28,12 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
     private val planetsTextView: TextView
     private val planetsSeekBar: SeekBar
 
+    private val bombsTextView: TextView
+    private val bombsSeekBar: SeekBar
+
+    private val rocketShipsTextView: TextView
+    private val rocketShipsSeekBar: SeekBar
+
     private val connectionListener = object : BluetoothConnectionManager.Listener {
         override fun onConnected(role: BluetoothConnectionManager.Role) {
             post {
@@ -71,6 +77,13 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
         planetsTextView = findViewById(R.id.my_planets)
         planetsSeekBar = findViewById(R.id.seek_planets)
 
+        bombsTextView = findViewById(R.id.bombs_text)
+        bombsSeekBar = findViewById(R.id.seek_bombs)
+
+        rocketShipsTextView = findViewById(R.id.rocketships_text)
+        rocketShipsSeekBar = findViewById(R.id.seek_rocketships)
+
+
         planetsSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 planetsTextView.text = progress.toString()
@@ -98,6 +111,26 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
             override fun onStopTrackingTouch(p0: SeekBar?) {}
         })
 
+        bombsSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                bombsTextView.text = progress.toString()
+                sendConfigUpdate()
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
+
+
+        rocketShipsSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                rocketShipsTextView.text = progress.toString()
+                sendConfigUpdate()
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+        })
+
+
         playButton.setOnClickListener {
             val seed = System.currentTimeMillis()
             context.startActivity(
@@ -106,6 +139,8 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
                     gridRows = rowsSeekBar.progress,
                     gridCols = colsSeekBar.progress,
                     planetAmount = planetsSeekBar.progress,
+                    bombAmount = bombsSeekBar.progress,
+                    rocketshipAmount = rocketShipsSeekBar.progress,
                     randomSeed = seed,
                     role = BluetoothConnectionManager.Role.HOST
                 )
@@ -124,7 +159,8 @@ class MultiplayerLobbyHostView @JvmOverloads constructor(
     }
 
     private fun sendConfigUpdate() {
-        val payload = ConnectionLobbyPayload(timestamp = System.currentTimeMillis(), rows = rowsSeekBar.progress, cols= colsSeekBar.progress, planets = planetsSeekBar.progress, start = false)
+        Log.d(this.javaClass.toString(), "Sending update to client!")
+        val payload = ConnectionLobbyPayload(timestamp = System.currentTimeMillis(), rows = rowsSeekBar.progress, cols= colsSeekBar.progress, planets = planetsSeekBar.progress, bombs =  bombsSeekBar.progress, rocketShips = rocketShipsSeekBar.progress,  start = false)
         val sent = BluetoothConnectionManager.send(payload.encode())
         if (!sent) {
             Toast.makeText(context, "No active Bluetooth connection.", Toast.LENGTH_SHORT).show()

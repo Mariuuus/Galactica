@@ -20,6 +20,8 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
 
     private val colsTextView: TextView
     private val rowsTextView: TextView
+    private val bombsTextView: TextView
+    private val rocketShipsTextView: TextView
     private val planetsTextView: TextView
 
     private val connectionListener = object : BluetoothConnectionManager.Listener {
@@ -36,6 +38,8 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
                 colsTextView.text = payload.cols.toString();
                 rowsTextView.text = payload.rows.toString();
                 planetsTextView.text = payload.planets.toString();
+                rocketShipsTextView.text = payload.rocketShips.toString();
+                bombsTextView.text = payload.bombs.toString();
 
                 if(payload.start) {
                     BluetoothConnectionManager.removeListener(this)
@@ -45,6 +49,8 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
                             gridRows = payload.rows,
                             gridCols = payload.cols,
                             planetAmount = payload.planets,
+                            bombAmount =  payload.bombs,
+                            rocketshipAmount =  payload.rocketShips,
                             randomSeed = payload.timestamp,
                             role = BluetoothConnectionManager.Role.CLIENT
                         )
@@ -66,6 +72,8 @@ class MultiplayerLobbyClientView @JvmOverloads constructor(
 
         colsTextView = findViewById(R.id.cols_text)
         rowsTextView = findViewById(R.id.rows_text)
+        bombsTextView = findViewById(R.id.bombs_text)
+        rocketShipsTextView = findViewById(R.id.rocketship_text)
         planetsTextView = findViewById(R.id.my_planets)
     }
 

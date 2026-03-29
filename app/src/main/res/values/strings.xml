@@ -44,5 +44,6 @@
     <string name="multi_player_retry_level">Erneut Spielen</string>
     <string name="multi_lose_description">Arg... Das ist aber ärgerlich!</string>
     <string name="multi_lose_title">Verloren!</string>
+    <string name="items">Items:</string>
 
 </resources>
