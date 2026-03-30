@@ -1,14 +1,16 @@
-# thanks to https://medium.com/@mojtabashirkhani.nba/setting-up-gitlab-ci-cd-for-an-android-project-a-step-by-step-guide-b3c5886084de
-
 stages:
   - build
   - test
+  - release
 
 variables:
   ANDROID_HOME: "$CI_PROJECT_DIR/android-sdk"
   ANDROID_SDK_ROOT: "$CI_PROJECT_DIR/android-sdk"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  APK_DEBUG_DIR: "app/build/outputs/apk/debug"
+  APK_BASE_NAME: "app-debug"
+  PACKAGE_REGISTRY_URL: "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/android-app"
 
 default:
   image: eclipse-temurin:17-jdk
@@ -20,9 +22,10 @@ default:
       - android-sdk
   before_script:
     - apt-get update -y
-    - apt-get install -y wget unzip
+    - apt-get install -y wget unzip curl
     - export JAVA_HOME="$(dirname "$(dirname "$(readlink -f "$(which java)")")")"
     - export PATH="$JAVA_HOME/bin:$PATH"
+    - java -version
     - mkdir -p "$ANDROID_HOME/cmdline-tools"
     - wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
     - unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_HOME/cmdline-tools"
@@ -36,10 +39,15 @@ build:
   stage: build
   script:
     - ./gradlew --no-daemon assembleDebug
+    - VERSION="${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}"
+    - VERSIONED_APK="$APK_DEBUG_DIR/app-${VERSION}.apk"
+    - cp "$APK_DEBUG_DIR/${APK_BASE_NAME}.apk" "$VERSIONED_APK"
+    - echo "APK built → $VERSIONED_APK"
   artifacts:
-    expire_in: 1 week
+    name: "android-app-$CI_COMMIT_REF_SLUG"
+    expire_in: 4 weeks
     paths:
-      - app/build/outputs/
+      - app/build/outputs/apk/
 
 test:
   stage: test
@@ -51,3 +59,48 @@ test:
     paths:
       - app/build/reports/tests/
       - app/build/test-results/
+
+publish-apk:
+  stage: release
+  needs:
+    - job: build
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - >-
+      VERSION=$CI_COMMIT_TAG &&
+      APK_FILE=app-${VERSION}.apk &&
+      APK_PATH=$APK_DEBUG_DIR/${APK_FILE} &&
+      curl --fail --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file $APK_PATH ${PACKAGE_REGISTRY_URL}/${VERSION}/${APK_FILE} &&
+      echo "Published $APK_FILE"
+
+create-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: publish-apk
+  rules:
+    - if: $CI_COMMIT_TAG
+  before_script:
+    - echo "Skipping Android SDK setup for release job"
+  script:
+    - echo "Creating GitLab Release for $CI_COMMIT_TAG"
+  release:
+    tag_name: "$CI_COMMIT_TAG"
+    name: "Release $CI_COMMIT_TAG"
+    description: |
+      ## Android App — $CI_COMMIT_TAG
+
+      Built from commit `$CI_COMMIT_SHA` on branch `$CI_COMMIT_REF_NAME`.
+
+      ### Download
+      Click the APK link below to download the release build.
+
+      ### Changes
+      See the [commit history]($CI_PROJECT_URL/-/commits/$CI_COMMIT_TAG) for what changed in this release.
+    assets:
+      links:
+        - name: "app-$CI_COMMIT_TAG.apk"
+          url: "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/android-app/$CI_COMMIT_TAG/app-$CI_COMMIT_TAG.apk"
+          link_type: package
