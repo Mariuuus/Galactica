@@ -51,5 +51,6 @@
     <string name="daily_already_played">Du hast die tägliche Herausforderung heute bereits gespielt!</string>
     <string name="daily_share_results">Ergebnisse teilen!</string>
     <string name="volume_label">Lautstärke:</string>
+    <string name="hint_multiplayer">Achtung: Es kann notwendig sein, dass die beiden Geräte vorher per Bluetooth verbunden wurde.</string>
 
 </resources>
