@@ -161,7 +161,13 @@ class SinglePlayerActivity : AppCompatActivity() {
         pauseButton = findViewById(R.id.pause_button)
         resumeButton = findViewById(R.id.resume_button)
 
-        pauseButton.setOnClickListener { pauseModal.show() }
+        pauseButton.setOnClickListener {
+            if(game.state == Game.GameState.WON || game.state == Game.GameState.LOST)  {
+                refreshUITextElements(null)
+            } else {
+                pauseModal.show()
+            }
+        }
         resumeButton.setOnClickListener { pauseModal.hide() }
 
         for (btn in listOf<Button>(
@@ -180,14 +186,23 @@ class SinglePlayerActivity : AppCompatActivity() {
             btn.setOnClickListener { exit(game.state == Game.GameState.WON) }
         }
 
+        for (btn in listOf<Button>(
+            findViewById(R.id.single_lost_view_button),
+            findViewById(R.id.single_won_view_button),
+        )) {
+            btn.setOnClickListener { hideAllModals() }
+        }
+
         val flaggingModeToggle = findViewById<MaterialButton>(R.id.single_flagging_toggle)
 
         flaggingModeToggle.addOnCheckedChangeListener { button, isChecked ->
-            button.icon = getDrawable(
-                if (isChecked) R.drawable._icon_flagtriangleright_crossed
-                else R.drawable._icon_flagtriangleright
-            )
-            game.flagMode = isChecked
+            if(game.state == Game.GameState.RUNNING) {
+                button.icon = getDrawable(
+                    if (isChecked) R.drawable._icon_flagtriangleright_crossed
+                    else R.drawable._icon_flagtriangleright
+                )
+                game.flagMode = isChecked
+            }
         }
 
 
@@ -207,6 +222,7 @@ class SinglePlayerActivity : AppCompatActivity() {
 
         if(game.state == Game.GameState.WON) {
             hideAllModals()
+            (findViewById<TextView>(R.id.win_modal_description)).text = getString(R.string.single_win_description, (game.allowedMoves - game.movesLeft))
             winModal.show()
         }
 
@@ -217,6 +233,7 @@ class SinglePlayerActivity : AppCompatActivity() {
 
         bombItem.itemCount = game.bombItemLeft
         rocketshipItem.itemCount = game.rocketShipItemLeft
+
     }
 
     fun handleRevealFlaggedField(cell: Cell) {

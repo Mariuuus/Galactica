@@ -45,5 +45,7 @@
     <string name="multi_lose_description">Arg... Das ist aber ärgerlich!</string>
     <string name="multi_lose_title">Verloren!</string>
     <string name="items">Items:</string>
+    <string name="single_player_view">Spielfeld anschauen</string>
+    <string name="multi_player_view">Spielfeld betrachten</string>
 
 </resources>

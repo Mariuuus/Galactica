@@ -262,6 +262,12 @@
             android:text="@string/multi_player_retry_level" />
 
         <Button
+            android:id="@+id/multi_won_view_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_player_view" />
+
+        <Button
             android:id="@+id/multi_won_end_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -301,6 +307,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/multi_player_retry_level" />
+
+        <Button
+            android:id="@+id/multi_lost_view_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multi_player_view" />
 
         <Button
             android:id="@+id/multi_lost_end_button"

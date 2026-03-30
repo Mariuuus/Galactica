@@ -72,6 +72,6 @@ constructor(private val ctx: Context, private val attributeSet: AttributeSet? = 
                 )
             )
         }
-        bestTryTextView.text = "Done in: N/A"
+        bestTryTextView.text = ""
     }
 }

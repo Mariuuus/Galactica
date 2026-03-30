@@ -206,11 +206,13 @@ class MultiPlayerActivity : AppCompatActivity() {
         val flaggingModeToggle = findViewById<MaterialButton>(R.id.multiplayer_flagging_toggle)
 
         flaggingModeToggle.addOnCheckedChangeListener { button, isChecked ->
-            button.icon = getDrawable(
-                if (isChecked) R.drawable._icon_flagtriangleright_crossed
-                else R.drawable._icon_flagtriangleright
-            )
-            game.flagMode = isChecked
+            if(game.state == Game.GameState.RUNNING) {
+                button.icon = getDrawable(
+                    if (isChecked) R.drawable._icon_flagtriangleright_crossed
+                    else R.drawable._icon_flagtriangleright
+                )
+                game.flagMode = isChecked
+            }
         }
 
         winModal = findViewById(R.id.win_modal)
@@ -218,11 +220,24 @@ class MultiPlayerActivity : AppCompatActivity() {
         pauseModal = findViewById(R.id.pause_modal)
         revealFlaggedModal = findViewById(R.id.reveal_flagged_cell_modal)
 
-        findViewById<Button>(R.id.pause_button).setOnClickListener { pauseModal.show() }
+        findViewById<Button>(R.id.pause_button).setOnClickListener {
+            if(game.state == Game.GameState.WON || game.state == Game.GameState.LOST)  {
+                refreshUITextElements(null)
+            } else {
+                pauseModal.show()
+            }
+        }
         findViewById<Button>(R.id.resume_button).setOnClickListener { pauseModal.hide() }
         findViewById<Button>(R.id.multi_won_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
         findViewById<Button>(R.id.multi_lost_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
         findViewById<Button>(R.id.multi_pause_end_button).setOnClickListener { BluetoothConnectionManager.disconnect() }
+
+        for (btn in listOf<Button>(
+            findViewById(R.id.multi_lost_view_button),
+            findViewById(R.id.multi_won_view_button),
+        )) {
+            btn.setOnClickListener { hideAllModals() }
+        }
 
         hideAllModals()
         refreshUITextElements(null)
