@@ -15,6 +15,8 @@ import android.os.Build
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +36,7 @@ import de.mstrauss.galactica.patterns.SinglePlayerState
 import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.patterns.MultiPlayerClientLobbyState
 import de.mstrauss.galactica.patterns.MultiPlayerHostLobbyState
+import de.mstrauss.galactica.audio.GameAudioManager
 import de.mstrauss.galactica.ui.applyFullscreen
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -145,6 +148,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        GameAudioManager.init(this)
+
         bluetoothAdapter = getSystemService(BluetoothManager::class.java)?.adapter
         discoveredDeviceAdapter = ArrayAdapter(
             this,
@@ -227,6 +232,20 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.join_game_button).setOnClickListener {
             startJoinDiscovery()
         }
+        val volumeSeekBar = findViewById<SeekBar>(R.id.seek_volume)
+        val volumeText = findViewById<TextView>(R.id.volume_text)
+        val currentVolume = (GameAudioManager.getVolume() * 100).toInt()
+        volumeSeekBar.progress = currentVolume
+        volumeText.text = currentVolume.toString()
+        volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                volumeText.text = progress.toString()
+                GameAudioManager.setVolume(progress / 100f, this@MainActivity)
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
         stateMachine.changeState(MainMenuState())
         updateDailyButtonText()
     }

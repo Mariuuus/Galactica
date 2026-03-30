@@ -163,7 +163,39 @@
             android:gravity="center|start"
             android:orientation="vertical"
             android:padding="10pt"
-            android:visibility="gone"></LinearLayout>
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/volume_label"
+                    android:textColor="@color/space_glow" />
+
+                <SeekBar
+                    android:id="@+id/seek_volume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:min="0"
+                    android:minWidth="80dp"
+                    android:progress="70"
+                    android:progressTint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/volume_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="70"
+                    android:textColor="@color/space_glow" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/single_menu_layout"

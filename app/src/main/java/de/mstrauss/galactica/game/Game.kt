@@ -2,6 +2,7 @@ package de.mstrauss.galactica.game
 
 import android.content.Context
 import android.view.View
+import de.mstrauss.galactica.audio.GameAudioManager
 import kotlin.random.Random
 
 open class Game(
@@ -151,25 +152,35 @@ open class Game(
                 }
                 field.revealed = true
                 movesLeft--
-                if(field.isPlanet()) planetsFound++
+                if(field.isPlanet()) {
+                    planetsFound++
+                    GameAudioManager.playPlanetSound()
+                }
             }
         } else if (!field.revealed) {
             field.flagged = !field.flagged
         }
 
         if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
-        if(planetAmount == planetsFound) state = GameState.WON
+        if(planetAmount == planetsFound) {
+            state = GameState.WON
+            GameAudioManager.playWonSound()
+        }
         onUIRefresh?.invoke(field)
     }
 
 
     open fun useRocketship(positions: List<Pair<Int, Int>>) {
         if(state != GameState.BLOCKED) return
+        GameAudioManager.playRocketshipSound()
         positions.forEach { (row, col) ->
             val cell = field[row][col]
             if(!cell.flagged && !cell.revealed){
                 cell.revealed = true
-                if(cell.isPlanet()) planetsFound++
+                if(cell.isPlanet()) {
+                    planetsFound++
+                    GameAudioManager.playPlanetSound()
+                }
                 onUIRefresh?.invoke(cell)
             }
             cell.dehighlight()
@@ -179,12 +190,17 @@ open class Game(
         state = GameState.RUNNING
 
         if(movesLeft <= 0 && planetAmount != planetsFound) state = GameState.LOST
-        if(planetAmount == planetsFound) state = GameState.WON
+        if(planetAmount == planetsFound) {
+            state = GameState.WON
+            GameAudioManager.playWonSound()
+        }
         onUIRefresh?.invoke(null)
     }
 
     open fun useBomb(positions : List<Pair<Int, Int>>) {
         if(state != GameState.BLOCKED) return
+        GameAudioManager.playBombSound()
+
         positions.forEach { (row, col) ->
             var cell = field[row][col]
             if(!cell.flagged && !cell.revealed){
