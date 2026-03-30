@@ -90,7 +90,7 @@ create-release:
     tag_name: "$CI_COMMIT_TAG"
     name: "Release $CI_COMMIT_TAG"
     description: |
-      ## Android App — $CI_COMMIT_TAG
+      ## Galactica App — $CI_COMMIT_TAG
 
       Built from commit `$CI_COMMIT_SHA` on branch `$CI_COMMIT_REF_NAME`.
 
