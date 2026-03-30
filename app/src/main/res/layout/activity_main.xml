@@ -115,6 +115,7 @@
                     app:availableMoves="18"
                     app:columns="9"
                     app:planetAmount="6"
+                    app:rocketships="1"
                     app:rows="7" />
 
                 <de.mstrauss.galactica.ui.LevelCard
