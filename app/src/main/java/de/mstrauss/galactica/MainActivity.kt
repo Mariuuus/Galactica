@@ -35,6 +35,8 @@ import de.mstrauss.galactica.multiplayer.BluetoothConnectionManager
 import de.mstrauss.galactica.patterns.MultiPlayerClientLobbyState
 import de.mstrauss.galactica.patterns.MultiPlayerHostLobbyState
 import de.mstrauss.galactica.ui.applyFullscreen
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 
@@ -181,14 +183,26 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.campaign_button).setOnClickListener {
             stateMachine.changeState((SinglePlayerCampaignState()))
         }
-        findViewById<View>(R.id.start_single_player_game_button).setOnClickListener {
+        findViewById<Button>(R.id.daily_challenge_button).setOnClickListener {
+            val today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+            val prefs = getSharedPreferences("galactica_daily", Context.MODE_PRIVATE)
+            val lastPlayed = prefs.getString("last_daily_date", null)
+            if (lastPlayed == today) {
+                Toast.makeText(this, getString(R.string.daily_already_played), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            prefs.edit().putString("last_daily_date", today).apply()
+            val seed = today.toLong()
             startActivity(
                 SinglePlayerActivity.createIntent(
                     context = this,
                     gridRows = 7,
                     gridCols = 9,
                     planetAmount = 4,
-                    allowedMoves = 7 * 9
+                    bombAmount = 2,
+                    rocketshipAmount = 1,
+                    allowedMoves = 7 * 9,
+                    randomSeed = seed
                 )
             )
         }

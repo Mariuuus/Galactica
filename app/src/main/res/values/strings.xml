@@ -47,5 +47,7 @@
     <string name="items">Items:</string>
     <string name="single_player_view">Spielfeld anschauen</string>
     <string name="multi_player_view">Spielfeld betrachten</string>
+    <string name="daily_challenge">Tägliche Herausforderung</string>
+    <string name="daily_already_played">Du hast die tägliche Herausforderung heute bereits gespielt!</string>
 
 </resources>

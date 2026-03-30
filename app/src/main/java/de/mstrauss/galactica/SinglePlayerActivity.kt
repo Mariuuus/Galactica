@@ -30,6 +30,7 @@ class SinglePlayerActivity : AppCompatActivity() {
         private const val EXTRA_BOMB_ITEM_AMOUNT = "extra_bombs_amount"
         private const val EXTRA_ROCKETSHIP_ITEM_AMOUNT = "extra_rocketship_amount"
         private const val EXTRA_ALLOWED_MOVES = "extra_allowed_moves"
+        private const val EXTRA_RANDOM_SEED = "extra_random_seed"
         private const val EXTRA_WON = "extra_won"
 
         private const val DEFAULT_GRID_ROWS = 7
@@ -45,7 +46,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             planetAmount: Int = DEFAULT_PLANET_AMOUNT,
             bombAmount: Int = DEFAULT_BOMB_ITEM_AMOUNT,
             rocketshipAmount: Int = DEFAULT_ROCKETSHIP_ITEM_AMOUNT,
-            allowedMoves: Int = gridRows * gridCols
+            allowedMoves: Int = gridRows * gridCols,
+            randomSeed: Long? = null
         ): Intent = Intent(context, SinglePlayerActivity::class.java).apply {
             putExtra(EXTRA_GRID_ROWS, gridRows)
             putExtra(EXTRA_GRID_COLS, gridCols)
@@ -53,6 +55,7 @@ class SinglePlayerActivity : AppCompatActivity() {
             putExtra(EXTRA_ALLOWED_MOVES, allowedMoves)
             putExtra(EXTRA_BOMB_ITEM_AMOUNT, bombAmount)
             putExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, rocketshipAmount)
+            if (randomSeed != null) putExtra(EXTRA_RANDOM_SEED, randomSeed)
         }
     }
 
@@ -91,6 +94,7 @@ class SinglePlayerActivity : AppCompatActivity() {
         val bombAmount = intent.getIntExtra(EXTRA_BOMB_ITEM_AMOUNT, DEFAULT_BOMB_ITEM_AMOUNT)
         val rocketshipAmount = intent.getIntExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, DEFAULT_ROCKETSHIP_ITEM_AMOUNT)
         val allowedMoves = intent.getIntExtra(EXTRA_ALLOWED_MOVES, gridRows * gridCols)
+        val randomSeed = if (intent.hasExtra(EXTRA_RANDOM_SEED)) intent.getLongExtra(EXTRA_RANDOM_SEED, 0L) else null
 
         game = Game(
             gridRows = gridRows,
@@ -103,7 +107,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             onUIRefresh = { refreshUITextElements(it) },
             handleRevealFlaggedField = { handleRevealFlaggedField(it) },
             startBombItem = { findViewById<BombItemView>(R.id.bomb_container).start(game) },
-            startRocketshipItem = { findViewById<RocketshipItemView>(R.id.rocketship_container).start(game) }
+            startRocketshipItem = { findViewById<RocketshipItemView>(R.id.rocketship_container).start(game) },
+            randomSeed = randomSeed
         )
 
         bombItem = findViewById<BombItemButtonView>(R.id.item_button_bomb)

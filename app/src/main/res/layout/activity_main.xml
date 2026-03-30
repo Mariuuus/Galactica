@@ -143,149 +143,16 @@
         <LinearLayout
             android:id="@+id/single_player_playground_setting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <GridLayout
-                android:id="@+id/testgrid"
-                android:layout_width="671dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:columnCount="6"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:rowCount="8">
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet10"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet11"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet12"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet13"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet14"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet15"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet2"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet3"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet4"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet5"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet6"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-
-                <de.mstrauss.galactica.ui.PlanetView
-                    android:id="@+id/planet7"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
-
-                </de.mstrauss.galactica.ui.PlanetView>
-            </GridLayout>
-
-            <LinearLayout
+            <de.mstrauss.galactica.ui.SingleplayerPlaygroundView
+                android:id="@+id/singleplayer_playground_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_height="wrap_content" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"></androidx.appcompat.widget.SwitchCompat>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/start_single_player_game_button"
-                style="@android:style/Widget.Material.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_game_button"
-                android:visibility="gone"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -319,6 +186,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/custom_game" />
+
+            <Button
+                android:id="@+id/daily_challenge_button"
+                style="@android:style/Widget.Material.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/daily_challenge" />
         </LinearLayout>
 
         <LinearLayout
