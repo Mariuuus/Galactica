@@ -21,6 +21,8 @@ import de.mstrauss.galactica.ui.RocketshipItemView
 import de.mstrauss.galactica.ui.IngameModalView
 import de.mstrauss.galactica.ui.RocketshipItemButtonView
 import de.mstrauss.galactica.ui.applyFullscreen
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class SinglePlayerActivity : AppCompatActivity() {
     companion object {
@@ -31,6 +33,7 @@ class SinglePlayerActivity : AppCompatActivity() {
         private const val EXTRA_ROCKETSHIP_ITEM_AMOUNT = "extra_rocketship_amount"
         private const val EXTRA_ALLOWED_MOVES = "extra_allowed_moves"
         private const val EXTRA_RANDOM_SEED = "extra_random_seed"
+        private const val EXTRA_IS_DAILY = "extra_is_daily"
         private const val EXTRA_WON = "extra_won"
 
         private const val DEFAULT_GRID_ROWS = 7
@@ -47,7 +50,8 @@ class SinglePlayerActivity : AppCompatActivity() {
             bombAmount: Int = DEFAULT_BOMB_ITEM_AMOUNT,
             rocketshipAmount: Int = DEFAULT_ROCKETSHIP_ITEM_AMOUNT,
             allowedMoves: Int = gridRows * gridCols,
-            randomSeed: Long? = null
+            randomSeed: Long? = null,
+            isDaily: Boolean = false
         ): Intent = Intent(context, SinglePlayerActivity::class.java).apply {
             putExtra(EXTRA_GRID_ROWS, gridRows)
             putExtra(EXTRA_GRID_COLS, gridCols)
@@ -56,6 +60,7 @@ class SinglePlayerActivity : AppCompatActivity() {
             putExtra(EXTRA_BOMB_ITEM_AMOUNT, bombAmount)
             putExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, rocketshipAmount)
             if (randomSeed != null) putExtra(EXTRA_RANDOM_SEED, randomSeed)
+            putExtra(EXTRA_IS_DAILY, isDaily)
         }
     }
 
@@ -74,6 +79,7 @@ class SinglePlayerActivity : AppCompatActivity() {
     lateinit var bombItem: BombItemButtonView
     lateinit var rocketshipItem: RocketshipItemButtonView
 
+    private var isDaily = false
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +101,7 @@ class SinglePlayerActivity : AppCompatActivity() {
         val rocketshipAmount = intent.getIntExtra(EXTRA_ROCKETSHIP_ITEM_AMOUNT, DEFAULT_ROCKETSHIP_ITEM_AMOUNT)
         val allowedMoves = intent.getIntExtra(EXTRA_ALLOWED_MOVES, gridRows * gridCols)
         val randomSeed = if (intent.hasExtra(EXTRA_RANDOM_SEED)) intent.getLongExtra(EXTRA_RANDOM_SEED, 0L) else null
+        isDaily = intent.getBooleanExtra(EXTRA_IS_DAILY, false)
 
         game = Game(
             gridRows = gridRows,
@@ -229,11 +236,13 @@ class SinglePlayerActivity : AppCompatActivity() {
             hideAllModals()
             (findViewById<TextView>(R.id.win_modal_description)).text = getString(R.string.single_win_description, (game.allowedMoves - game.movesLeft))
             winModal.show()
+            saveDailyResults()
         }
 
         if(game.state == Game.GameState.LOST) {
             hideAllModals()
             loseModal.show()
+            saveDailyResults()
         }
 
         bombItem.itemCount = game.bombItemLeft
@@ -250,6 +259,20 @@ class SinglePlayerActivity : AppCompatActivity() {
             game.onFieldClicked(cell)
         }
         findViewById<Button>(R.id.reveal_flagged_cell_no_button).setOnClickListener { hideAllModals() }
+    }
+
+    private fun saveDailyResults() {
+        if (!isDaily) return
+        val today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+        val prefs = getSharedPreferences("galactica_daily", Context.MODE_PRIVATE)
+        if (prefs.contains("daily_moves_used_$today")) return
+        val movesUsed = game.allowedMoves - game.movesLeft
+        prefs.edit()
+            .putInt("daily_moves_used_$today", movesUsed)
+            .putInt("daily_allowed_moves_$today", game.allowedMoves)
+            .putInt("daily_bombs_left_$today", game.bombItemLeft)
+            .putInt("daily_rocketships_left_$today", game.rocketShipItemLeft)
+            .apply()
     }
 
     fun reset() {

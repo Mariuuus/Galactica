@@ -49,5 +49,6 @@
     <string name="multi_player_view">Spielfeld betrachten</string>
     <string name="daily_challenge">Tägliche Herausforderung</string>
     <string name="daily_already_played">Du hast die tägliche Herausforderung heute bereits gespielt!</string>
+    <string name="daily_share_results">Ergebnisse teilen!</string>
 
 </resources>

@@ -185,7 +185,21 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.daily_challenge_button).setOnClickListener {
             val today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+            val displayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             val prefs = getSharedPreferences("galactica_daily", Context.MODE_PRIVATE)
+            if (prefs.contains("daily_moves_used_$today")) {
+                val movesUsed = prefs.getInt("daily_moves_used_$today", 0)
+                val allowedMoves = prefs.getInt("daily_allowed_moves_$today", 0)
+                val bombsLeft = prefs.getInt("daily_bombs_left_$today", 0)
+                val rocketshipsLeft = prefs.getInt("daily_rocketships_left_$today", 0)
+                val shareText = "#Galactica $displayDate\nI used $movesUsed/$allowedMoves moves and have $bombsLeft bombs and $rocketshipsLeft rocketships left!"
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                }
+                startActivity(Intent.createChooser(shareIntent, null))
+                return@setOnClickListener
+            }
             val lastPlayed = prefs.getString("last_daily_date", null)
             if (lastPlayed == today) {
                 Toast.makeText(this, getString(R.string.daily_already_played), Toast.LENGTH_SHORT).show()
@@ -202,7 +216,8 @@ class MainActivity : AppCompatActivity() {
                     bombAmount = 2,
                     rocketshipAmount = 1,
                     allowedMoves = 7 * 9,
-                    randomSeed = seed
+                    randomSeed = seed,
+                    isDaily = true
                 )
             )
         }
@@ -213,6 +228,23 @@ class MainActivity : AppCompatActivity() {
             startJoinDiscovery()
         }
         stateMachine.changeState(MainMenuState())
+        updateDailyButtonText()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateDailyButtonText()
+    }
+
+    private fun updateDailyButtonText() {
+        val today = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+        val prefs = getSharedPreferences("galactica_daily", Context.MODE_PRIVATE)
+        val dailyButton = findViewById<Button>(R.id.daily_challenge_button)
+        if (prefs.contains("daily_moves_used_$today")) {
+            dailyButton.text = getString(R.string.daily_share_results)
+        } else {
+            dailyButton.text = getString(R.string.daily_challenge)
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
