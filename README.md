@@ -1,7 +1,7 @@
 # Galactica
 
-[![pipeline status](https://gitlab.hs-anhalt.de/stmrstra/galactica-android/badges/main/pipeline.svg)](https://gitlab.hs-anhalt.de/stmrstra/galactica-android/-/commits/main)
-[![Latest Release](https://gitlab.hs-anhalt.de/stmrstra/galactica-android/-/badges/release.svg)](https://gitlab.hs-anhalt.de/stmrstra/galactica-android/-/releases)
+[![Android CI](https://github.com/Mariuuus/Galactica/actions/workflows/main.yaml/badge.svg)](https://github.com/Mariuuus/Galactica/actions/workflows/main.yaml)
+[![Latest Release](https://img.shields.io/github/v/release/Mariuuus/Galactica)](https://github.com/Mariuuus/Galactica/releases/latest)
 
 A space-themed Minesweeper-style puzzle game for Android. Reveal grid cells to find planets while avoiding bombs.
 
