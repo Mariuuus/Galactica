@@ -52,7 +52,7 @@ open class Game(
     var bombItemLeft = bombItemAmount
     var rocketShipItemLeft = rocketshipItemAmount
     var planetsFound = 0
-
+    var score = -1
 
     var field: Array<Array<Cell>>
 
@@ -137,6 +137,22 @@ open class Game(
         }
 
         return set.toList()
+    }
+
+    fun calcScore() : Int {
+        var revealedFields = 0
+        field.forEach {
+            it.forEach {
+                if(it.revealed) revealedFields++
+            }
+        }
+        val score = (((gridRows * gridRows) - planetAmount) - (revealedFields - planetsFound)) * 10
+        return score
+    }
+
+    fun calcMaxScore() : Int {
+        val score = ((gridRows * gridRows) - planetAmount) * 10
+        return score
     }
 
     open fun onFieldClicked(field: Cell) {

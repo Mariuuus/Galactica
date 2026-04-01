@@ -230,6 +230,7 @@ class SinglePlayerActivity : AppCompatActivity() {
 
     fun refreshUITextElements(cell: Cell?) {
         movesLeftTextView.text = getString(R.string.x_moves_left, game.movesLeft)
+        if(isDaily) movesLeftTextView.text = getString(R.string.score, game.calcScore(), game.calcMaxScore())
         planetsFoundTextView.text = getString(R.string.y_von_z_planeten_gefunden, game.planetsFound, game.planetAmount)
 
         if(game.state == Game.GameState.WON) {
