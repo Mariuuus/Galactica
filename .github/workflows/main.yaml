@@ -129,11 +129,175 @@ jobs:
             app/build/test-results/
           retention-days: 7
 
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build, test]
+    outputs:
+      changelog_path: changelog/CHANGELOG.md
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed to walk tags
+
+      - name: Generate changelog from conventional commits
+        run: |
+          mkdir -p changelog
+
+          CURRENT_TAG="${GITHUB_REF#refs/tags/}"
+
+          # Find the previous tag (if none, use the first commit)
+          PREV_TAG=$(git tag --sort=-creatordate | grep -v "^${CURRENT_TAG}$" | head -n1)
+          if [ -z "$PREV_TAG" ]; then
+            RANGE="HEAD"
+            RANGE_DISPLAY="Initial release"
+          else
+            RANGE="${PREV_TAG}..HEAD"
+            RANGE_DISPLAY="${PREV_TAG}...${CURRENT_TAG}"
+          fi
+
+          echo "Generating changelog for range: $RANGE"
+
+          # Collect commits in "HASH SUBJECT" format
+          git log "$RANGE" --pretty=format:"%H %s" > /tmp/commits_raw.txt
+
+          declare -A sections
+          sections[breaking]=""
+          sections[feat]=""
+          sections[fix]=""
+          sections[perf]=""
+          sections[refactor]=""
+          sections[docs]=""
+          sections[chore]=""
+          sections[ci]=""
+          sections[other]=""
+
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          while IFS= read -r line; do
+            HASH=$(echo "$line" | awk '{print $1}')
+            SUBJECT=$(echo "$line" | cut -d' ' -f2-)
+            SHORT="${HASH::7}"
+            LINK="[\`${SHORT}\`](${REPO_URL}/commit/${HASH})"
+
+            # Detect breaking changes (BREAKING CHANGE in body or ! in type)
+            if echo "$SUBJECT" | grep -qE '^[a-z]+(\(.+\))?!:'; then
+              DESC=$(echo "$SUBJECT" | sed 's/^[a-z]*(\?.*)!: //')
+              sections[breaking]+="- ${DESC} (${LINK})\n"
+              continue
+            fi
+
+            TYPE=$(echo "$SUBJECT" | grep -oP '^[a-z]+(?=(\(.+\))?:)' || echo "")
+            SCOPE=$(echo "$SUBJECT" | grep -oP '(?<=\()[^)]+(?=\))' || echo "")
+            DESC=$(echo "$SUBJECT" | sed 's/^[a-z]*(\([^)]*\))\?:\s*//' | sed 's/^[a-z]*:\s*//')
+
+            ENTRY="- "
+            [ -n "$SCOPE" ] && ENTRY+="**${SCOPE}**: "
+            ENTRY+="${DESC} (${LINK})"
+
+            case "$TYPE" in
+              feat)     sections[feat]+="${ENTRY}\n" ;;
+              fix)      sections[fix]+="${ENTRY}\n" ;;
+              perf)     sections[perf]+="${ENTRY}\n" ;;
+              refactor) sections[refactor]+="${ENTRY}\n" ;;
+              docs)     sections[docs]+="${ENTRY}\n" ;;
+              chore)    sections[chore]+="${ENTRY}\n" ;;
+              ci)       sections[ci]+="${ENTRY}\n" ;;
+              *)        sections[other]+="${ENTRY}\n" ;;
+            esac
+          done < /tmp/commits_raw.txt
+
+          # Write the changelog
+          {
+            echo "## Galactica App — ${CURRENT_TAG}"
+            echo ""
+            echo "Built from commit [\`${GITHUB_SHA::7}\`](${REPO_URL}/commit/${GITHUB_SHA})."
+            echo "Full diff: [${RANGE_DISPLAY}](${REPO_URL}/compare/${RANGE_DISPLAY})"
+            echo ""
+
+            if [ -n "${sections[breaking]}" ]; then
+              echo "### ⚠️ Breaking Changes"
+              echo ""
+              printf "${sections[breaking]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[feat]}" ]; then
+              echo "### ✨ New Features"
+              echo ""
+              printf "${sections[feat]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[fix]}" ]; then
+              echo "### 🐛 Bug Fixes"
+              echo ""
+              printf "${sections[fix]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[perf]}" ]; then
+              echo "### ⚡ Performance Improvements"
+              echo ""
+              printf "${sections[perf]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[refactor]}" ]; then
+              echo "### ♻️ Refactoring"
+              echo ""
+              printf "${sections[refactor]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[docs]}" ]; then
+              echo "### 📖 Documentation"
+              echo ""
+              printf "${sections[docs]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[chore]}" ]; then
+              echo "### 🔧 Chores"
+              echo ""
+              printf "${sections[chore]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[ci]}" ]; then
+              echo "### 👷 CI / Build"
+              echo ""
+              printf "${sections[ci]}"
+              echo ""
+            fi
+
+            if [ -n "${sections[other]}" ]; then
+              echo "### 📦 Other Changes"
+              echo ""
+              printf "${sections[other]}"
+              echo ""
+            fi
+
+            echo "---"
+            echo "_Download the APK asset below to install this release._"
+          } > changelog/CHANGELOG.md
+
+          echo "--- Generated changelog ---"
+          cat changelog/CHANGELOG.md
+
+      - name: Upload changelog artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: changelog/
+          retention-days: 7
+
   release:
     name: Publish Release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [build, test]
+    needs: [build, test, changelog]
     permissions:
       contents: write
     steps:
@@ -143,16 +307,16 @@ jobs:
           name: android-app-${{ github.ref_name }}
           path: apk-output
 
+      - name: Download changelog artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: changelog
+          path: changelog
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
-          body: |
-            ## Galactica App — ${{ github.ref_name }}
-            Built from commit `${{ github.sha }}`.
-            ### Download
-            Click the APK asset below to download the release build.
-            ### Changes
-            See the [commit history](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) for what changed in this release.
+          body_path: changelog/CHANGELOG.md
           files: apk-output/debug/app-${{ github.ref_name }}.apk
           fail_on_unmatched_files: true
