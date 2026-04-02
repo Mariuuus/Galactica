@@ -146,12 +146,12 @@ open class Game(
                 if(it.revealed) revealedFields++
             }
         }
-        val score = (((gridRows * gridRows) - planetAmount) - (revealedFields - planetsFound)) * 10
+        val score = (((gridRows * gridCols) - planetAmount) - (revealedFields - planetsFound)) * 10
         return score
     }
 
     fun calcMaxScore() : Int {
-        val score = ((gridRows * gridRows) - planetAmount) * 10
+        val score = ((gridRows * gridCols) - planetAmount) * 10
         return score
     }
 
