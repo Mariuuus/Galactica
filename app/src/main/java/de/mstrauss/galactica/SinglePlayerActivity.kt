@@ -230,7 +230,7 @@ class SinglePlayerActivity : AppCompatActivity() {
 
     fun refreshUITextElements(cell: Cell?) {
         movesLeftTextView.text = getString(R.string.x_moves_left, game.movesLeft)
-        if(isDaily) movesLeftTextView.text = getString(R.string.score, game.calcScore(), game.calcMaxScore())
+        if(isDaily) movesLeftTextView.text = getString(R.string.score, game.score, game.calcMaxScore())
         planetsFoundTextView.text = getString(R.string.y_von_z_planeten_gefunden, game.planetsFound, game.planetAmount)
 
         if(game.state == Game.GameState.WON) {
@@ -270,9 +270,11 @@ class SinglePlayerActivity : AppCompatActivity() {
         val movesUsed = game.allowedMoves - game.movesLeft
         prefs.edit()
             .putInt("daily_moves_used_$today", movesUsed)
+            .putInt("daily_score_$today", game.score)
+            .putInt("daily_max_score_$today", game.calcMaxScore())
             .putInt("daily_allowed_moves_$today", game.allowedMoves)
-            .putInt("daily_bombs_left_$today", game.bombItemLeft)
-            .putInt("daily_rocketships_left_$today", game.rocketShipItemLeft)
+            .putInt("daily_bombs_$today", game.bombItemAmount - game.bombItemLeft)
+            .putInt("daily_rocketships_$today", game.rocketshipItemAmount - game.rocketShipItemLeft)
             .apply()
     }
 

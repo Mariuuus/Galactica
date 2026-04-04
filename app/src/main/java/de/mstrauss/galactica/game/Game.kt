@@ -52,7 +52,6 @@ open class Game(
     var bombItemLeft = bombItemAmount
     var rocketShipItemLeft = rocketshipItemAmount
     var planetsFound = 0
-    var score = -1
 
     var field: Array<Array<Cell>>
 
@@ -139,21 +138,13 @@ open class Game(
         return set.toList()
     }
 
-    fun calcScore() : Int {
-        var revealedFields = 0
-        field.forEach {
-            it.forEach {
-                if(it.revealed) revealedFields++
-            }
-        }
-        val score = (((gridRows * gridCols) - planetAmount) - (revealedFields - planetsFound)) * 10
-        return score
-    }
 
-    fun calcMaxScore() : Int {
+    fun calcMaxScore(): Int {
         val score = ((gridRows * gridCols) - planetAmount) * 10
         return score
     }
+
+    var score = calcMaxScore()
 
     open fun onFieldClicked(field: Cell) {
         if(state != GameState.RUNNING) {
@@ -168,6 +159,7 @@ open class Game(
                 }
                 field.revealed = true
                 movesLeft--
+                if(!field.isPlanet()) score -= 10
                 if(field.isPlanet()) {
                     planetsFound++
                     GameAudioManager.playPlanetSound()
@@ -189,9 +181,11 @@ open class Game(
     open fun useRocketship(positions: List<Pair<Int, Int>>) {
         if(state != GameState.BLOCKED) return
         GameAudioManager.playRocketshipSound()
+        var counter = 0
         positions.forEach { (row, col) ->
             val cell = field[row][col]
             if(!cell.flagged && !cell.revealed){
+                counter++
                 cell.revealed = true
                 if(cell.isPlanet()) {
                     planetsFound++
@@ -202,6 +196,7 @@ open class Game(
             cell.dehighlight()
         }
         movesLeft--
+        score -= (counter/2) * 10
 
         state = GameState.RUNNING
 
@@ -227,6 +222,7 @@ open class Game(
             cell.dehighlight()
         }
         movesLeft--
+        score -= 3 * 10
 
         state = GameState.RUNNING
 
