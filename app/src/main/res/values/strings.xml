@@ -53,5 +53,7 @@
     <string name="daily_share_results">Ergebnisse teilen!</string>
     <string name="volume_label">Lautstärke:</string>
     <string name="hint_multiplayer">Achtung: Es kann notwendig sein, dass die beiden Geräte vorher per Bluetooth verbunden wurde.</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="next">Weiter</string>
 
 </resources>
