@@ -423,7 +423,8 @@
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="20dp">
+            </Space>
 
             <Button
                 android:layout_width="wrap_content"
