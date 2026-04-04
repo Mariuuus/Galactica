@@ -194,10 +194,12 @@ class MainActivity : AppCompatActivity() {
             val prefs = getSharedPreferences("galactica_daily", Context.MODE_PRIVATE)
             if (prefs.contains("daily_moves_used_$today")) {
                 val movesUsed = prefs.getInt("daily_moves_used_$today", 0)
+                val score = prefs.getInt("daily_score_$today", 0)
+                val maxScore = prefs.getInt("daily_max_score_$today", 0)
                 val allowedMoves = prefs.getInt("daily_allowed_moves_$today", 0)
-                val bombsLeft = prefs.getInt("daily_bombs_left_$today", 0)
-                val rocketshipsLeft = prefs.getInt("daily_rocketships_left_$today", 0)
-                val shareText = "#Galactica $displayDate\nI used $movesUsed/$allowedMoves moves and have $bombsLeft bombs and $rocketshipsLeft rocketships left!"
+                val bombs = prefs.getInt("daily_bombs_$today", 0)
+                val rocketships = prefs.getInt("daily_rocketships_$today", 0)
+                val shareText = "#Galactica $displayDate\nScore $score/$maxScore\n $bombs Bombe(n) und $rocketships Raumschiff(e) verwendet!"
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, shareText)

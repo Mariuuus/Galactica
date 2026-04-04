@@ -9,6 +9,7 @@
     <string name="start_game_button">Start Game</string>
     <string name="placeholder">N/A</string>
     <string name="x_moves_left">Noch %1$d Feldaufdeckung/en!</string>
+    <string name="score">Score: %1$d/%2$d!</string>
     <string name="y_von_z_planeten_gefunden">%1$d von %2$d Planeten gefunden!</string>
     <string name="flag_mode">Markieren</string>
     <string name="single_win_title">Gewonnen!</string>
